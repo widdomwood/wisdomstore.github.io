@@ -29,7 +29,7 @@
   <option value="Paystack">Paystack</option>
 </select>
 
-<button onclick="checkout()">Checkout</button>
+<button onclick="paymentMade()">I Have Made Payment</button>
 
 <script>
 const products = [
@@ -47,7 +47,16 @@ const products = [
   {country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
   {country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
   {country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
-  {country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"}
+  {country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"},
+  {country:"Ghana", price:5000, flag:"https://flagcdn.com/gh.svg"},
+  {country:"Germany", price:5000, flag:"https://flagcdn.com/de.svg"},
+  {country:"Italy", price:5000, flag:"https://flagcdn.com/it.svg"},
+  {country:"France", price:5000, flag:"https://flagcdn.com/fr.svg"},
+  {country:"Mexico", price:5000, flag:"https://flagcdn.com/mx.svg"},
+  {country:"Peru", price:5000, flag:"https://flagcdn.com/pe.svg"},
+  {country:"Russia", price:5000, flag:"https://flagcdn.com/ru.svg"},
+  {country:"Australia", price:5000, flag:"https://flagcdn.com/au.svg"},
+  {country:"Greece", price:5000, flag:"https://flagcdn.com/gr.svg"}
 ];
 
 const productsDiv = document.getElementById("products");
@@ -97,17 +106,16 @@ function renderCart(){
   document.getElementById("total").innerText = total;
 }
 
-function checkout(){
+function paymentMade(){
   if(cart.length===0){
-    alert("Cart is empty!");
+    alert("Your cart is empty!");
     return;
   }
   const paymentMethod = document.getElementById("payment").value;
-  let msg = `Payment Method: ${paymentMethod}\n\n`;
-  msg += `Account: 7030608002 (${paymentMethod})\nName: Wisdom Tochukwu Nwabugwu\n\n`;
-  msg += `Please send your payment proof on WhatsApp:\n`;
-  msg += "https://wa.me/2349157054608";
-  alert(msg);
+  // Redirect to WhatsApp
+  const message = `Hello, I have made payment for my order via ${paymentMethod}.\n\nAccount: 7030608002 (${paymentMethod})\nName: Wisdom Tochukwu Nwabugwu\nTotal: ₦${document.getElementById("total").innerText}`;
+  const url = "https://wa.me/2349157054608?text=" + encodeURIComponent(message);
+  window.location.href = url;
 }
 
 renderProducts();
