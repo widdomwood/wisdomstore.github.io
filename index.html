@@ -5,38 +5,146 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wisdom Store</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 20px; background:#f5f5f5; }
-  .product { border:1px solid #ccc; padding:10px; margin:10px; display:inline-block; width:200px; background:white; border-radius:8px; text-align:center; }
-  .product img { width:50px; height:30px; }
-  .cart { margin-top:20px; }
-  button { padding:5px 10px; margin-top:5px; cursor:pointer; }
-  .payment-info { margin:10px 0; padding:10px; border:1px dashed #888; background:#fff; border-radius:5px; }
+  body {
+    font-family: Arial, sans-serif;
+    margin:0;
+    padding:0;
+    background:#f5f5f5;
+  }
+  header {
+    background:#fdbf00;
+    padding:20px;
+    text-align:center;
+    color:#fff;
+    font-size:24px;
+    font-weight:bold;
+    text-shadow:1px 1px #000;
+  }
+  .container {
+    max-width:1200px;
+    margin:auto;
+    padding:20px;
+  }
+  .products {
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
+    gap:20px;
+  }
+  .product {
+    background:white;
+    padding:10px;
+    border-radius:8px;
+    text-align:center;
+    box-shadow:0 2px 6px rgba(0,0,0,0.15);
+    transition:transform 0.2s;
+  }
+  .product:hover {
+    transform:translateY(-5px);
+  }
+  .product img {
+    width:80px;
+    height:50px;
+    margin-bottom:10px;
+  }
+  .product h3 {
+    margin:5px 0;
+    font-size:16px;
+  }
+  .product p {
+    font-size:14px;
+    color:#333;
+  }
+  .product input {
+    width:50px;
+    margin-top:5px;
+  }
+  .product button {
+    background:#fdbf00;
+    border:none;
+    color:#fff;
+    padding:8px 12px;
+    margin-top:5px;
+    cursor:pointer;
+    border-radius:5px;
+    font-weight:bold;
+  }
+  .product button:hover {
+    background:#ffa500;
+  }
+  .cart-section {
+    margin-top:30px;
+    background:white;
+    padding:15px;
+    border-radius:8px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.15);
+  }
+  .cart-section h2 {
+    margin-top:0;
+  }
+  .cart-item {
+    display:flex;
+    justify-content:space-between;
+    margin:5px 0;
+  }
+  .cart-item button {
+    background:red;
+    padding:3px 8px;
+    border:none;
+    color:white;
+    border-radius:5px;
+    cursor:pointer;
+  }
+  .payment-info {
+    background:#fff3cd;
+    padding:10px;
+    border:1px solid #ffeeba;
+    border-radius:5px;
+    margin-top:15px;
+  }
+  #checkoutBtn {
+    background:#fdbf00;
+    border:none;
+    color:#fff;
+    padding:10px 15px;
+    margin-top:10px;
+    cursor:pointer;
+    font-weight:bold;
+    border-radius:5px;
+  }
+  #checkoutBtn:hover {
+    background:#ffa500;
+  }
 </style>
 </head>
 <body>
 
-<h1>Wisdom Store - International Numbers</h1>
+<header>Wisdom Store - International Numbers</header>
+<div class="container">
 
-<div id="products"></div>
+  <div class="products" id="products"></div>
 
-<h2>Cart</h2>
-<div class="cart" id="cart"></div>
-<h3>Total: ₦<span id="total">0</span></h3>
+  <div class="cart-section">
+    <h2>Cart</h2>
+    <div id="cart"></div>
+    <h3>Total: ₦<span id="total">0</span></h3>
 
-<h3>Choose Payment Method</h3>
-<select id="payment">
-  <option value="Opay">Opay</option>
-  <option value="Palmpay">Palmpay</option>
-  <option value="Paystack">Paystack</option>
-</select>
+    <h3>Choose Payment Method</h3>
+    <select id="payment">
+      <option value="Opay">Opay</option>
+      <option value="Palmpay">Palmpay</option>
+      <option value="Paystack">Paystack</option>
+    </select>
 
-<div class="payment-info">
-  <strong>Account Number:</strong> 7030608002<br>
-  <strong>Name:</strong> Wisdom Tochukwu Nwabugwu<br>
-  <strong>Payment Method:</strong> Will use the one selected above
+    <div class="payment-info">
+      <strong>Account Number:</strong> 7030608002<br>
+      <strong>Name:</strong> Wisdom Tochukwu Nwabugwu<br>
+      <strong>Payment Method:</strong> Will use the one selected above
+    </div>
+
+    <button id="checkoutBtn" onclick="paymentMade()">I Have Made Payment</button>
+  </div>
+
 </div>
-
-<button onclick="paymentMade()">I Have Made Payment</button>
 
 <script>
 const products = [
@@ -78,7 +186,7 @@ function renderProducts() {
         <img src="${p.flag}" alt="${p.country} flag">
         <h3>${p.country}</h3>
         <p>₦${p.price}</p>
-        <input type="number" id="qty${index}" value="1" min="1" style="width:50px;">
+        <input type="number" id="qty${index}" value="1" min="1">
         <br>
         <button onclick="addToCart(${index})">Add to Cart</button>
       </div>
@@ -108,7 +216,12 @@ function renderCart(){
   let total = 0;
   cart.forEach(c=>{
     total += c.price * c.qty;
-    cartDiv.innerHTML += `<p>${c.country} x ${c.qty} = ₦${c.price*c.qty} <button onclick="removeFromCart('${c.country}')">Remove</button></p>`;
+    cartDiv.innerHTML += `
+      <div class="cart-item">
+        <span>${c.country} x ${c.qty} = ₦${c.price*c.qty}</span>
+        <button onclick="removeFromCart('${c.country}')">Remove</button>
+      </div>
+    `;
   });
   document.getElementById("total").innerText = total;
 }
