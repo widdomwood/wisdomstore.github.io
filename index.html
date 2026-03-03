@@ -5,195 +5,112 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wisdom Store</title>
 <style>
-/* General Styles */
-body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
-header { background: #ff9800; color: white; padding: 15px 20px; text-align: center; font-size: 24px; font-weight: bold; }
-.container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; gap: 20px; }
-.product-card { background: #fff; border-radius: 8px; width: 200px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); text-align: center; }
-.product-card img { width: 100px; height: 60px; object-fit: cover; margin-bottom: 10px; }
-.product-card h3 { margin: 10px 0 5px 0; font-size: 18px; }
-.product-card p { margin: 5px 0; font-weight: bold; color: #333; }
-button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; }
-.add-btn { background: #28a745; color: white; margin: 5px; }
-.remove-btn { background: #dc3545; color: white; margin: 5px; }
-.add-btn:hover { background: #218838; }
-.remove-btn:hover { background: #c82333; }
-
-/* Cart Sidebar */
-#cart-sidebar { position: fixed; right: 0; top: 0; width: 300px; height: 100%; background: #fff; box-shadow: -2px 0 6px rgba(0,0,0,0.3); padding: 20px; transform: translateX(100%); transition: transform 0.3s ease; z-index: 1000; overflow-y: auto; }
-#cart-sidebar.active { transform: translateX(0); }
-#cart-sidebar h2 { text-align: center; margin-bottom: 20px; }
-#cart-items { list-style: none; padding: 0; margin: 0; }
-#cart-items li { display: flex; justify-content: space-between; margin-bottom: 10px; }
-#cart-total { font-weight: bold; margin-top: 15px; text-align: center; }
-#checkout-btn { width: 100%; background: #ff9800; color: white; padding: 10px; border-radius: 5px; margin-top: 10px; cursor: pointer; }
-#checkout-btn:hover { background: #e68900; }
-#cart-toggle { position: fixed; right: 20px; top: 20px; background: #ff9800; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; z-index: 1100; }
-#cart-toggle:hover { background: #e68900; }
-
-/* Modal for Payment Confirmation */
-#payment-modal { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1200; }
-#payment-modal .modal-content { background: #fff; padding: 20px; border-radius: 8px; max-width: 400px; width: 90%; text-align: center; }
-#payment-modal h2 { margin-bottom: 15px; }
-#payment-modal p { margin: 10px 0; }
-#payment-modal button { margin-top: 15px; width: 100%; background: #28a745; color: white; padding: 10px; border-radius: 5px; cursor: pointer; }
-#payment-modal button:hover { background: #218838; }
+  body { font-family: Arial, sans-serif; margin: 20px; background:#f5f5f5; }
+  .product { border:1px solid #ccc; padding:10px; margin:10px; display:inline-block; width:200px; background:white; border-radius:8px; text-align:center; }
+  .product img { width:50px; height:30px; }
+  .cart { margin-top:20px; }
+  button { padding:5px 10px; margin-top:5px; cursor:pointer; }
 </style>
 </head>
 <body>
 
-<header>Wisdom Store</header>
-<div id="cart-toggle">🛒 Cart (<span id="cart-count">0</span>)</div>
+<h1>Wisdom Store - International Numbers</h1>
 
-<div class="container" id="products-container">
-  <!-- Products injected via JavaScript -->
-</div>
+<div id="products"></div>
 
-<!-- Cart Sidebar -->
-<div id="cart-sidebar">
-  <h2>Your Cart</h2>
-  <ul id="cart-items"></ul>
-  <p id="cart-total">Total: ₦0</p>
-  <button id="checkout-btn">Checkout</button>
-</div>
+<h2>Cart</h2>
+<div class="cart" id="cart"></div>
+<h3>Total: ₦<span id="total">0</span></h3>
+
+<h3>Choose Payment Method</h3>
+<select id="payment">
+  <option value="Opay">Opay</option>
+  <option value="Palmpay">Palmpay</option>
+  <option value="Paystack">Paystack</option>
+</select>
+
+<button onclick="checkout()">Checkout</button>
+
 <script>
-let cart = [];
-
-function addToCart(name, price) {
-    cart.push({name, price});
-    updateCart();
-}
-
-function removeFromCart(index) {
-    cart.splice(index, 1);
-    updateCart();
-}
-
-function updateCart() {
-    const cartList = document.getElementById('cartItems');
-    cartList.innerHTML = '';
-    cart.forEach((item, i) => {
-        const li = document.createElement('li');
-        li.textContent = `${item.name} - ₦${item.price}`;
-        const removeBtn = document.createElement('button');
-        removeBtn.textContent = 'Remove';
-        removeBtn.style.marginLeft = '10px';
-        removeBtn.onclick = () => removeFromCart(i);
-        li.appendChild(removeBtn);
-        cartList.appendChild(li);
-    });
-}
-
-function checkout() {
-    if(cart.length === 0) {
-        alert('Your cart is empty!');
-        return;
-    }
-    
-    let total = cart.reduce((sum, item) => sum + item.price, 0);
-    
-    // Payment selection
-    let paymentOption = prompt(
-        `Your total is ₦${total}\nChoose payment option:\n1. Opay\n2. Palmpay\nEnter 1 or 2`
-    );
-    
-    let account;
-    if(paymentOption === '1') account = 'Opay: 7030608002 - Wisdom Tochukwu Nwabugwu';
-    else if(paymentOption === '2') account = 'Palmpay: 7030608002 - Wisdom Tochukwu Nwabugwu';
-    else { alert('Invalid option'); return; }
-    
-    alert(`Send ₦${total} to ${account}\nAfter payment, send proof to WhatsApp: +234 915 705 4608`);
-    
-    cart = [];
-    updateCart();
-}
-</script>
-<script>
-// Product Data
 const products = [
-  { name: "USA Number", price: 5000, flag: "https://flagcdn.com/w80/us.png" },
-  { name: "UK Number", price: 5000, flag: "https://flagcdn.com/w80/gb.png" },
-  { name: "Philippines Number", price: 4000, flag: "https://flagcdn.com/w80/ph.png" },
-  { name: "Indonesia Number", price: 4000, flag: "https://flagcdn.com/w80/id.png" },
-  { name: "Saudi Arabia Number", price: 10000, flag: "https://flagcdn.com/w80/sa.png" },
-  { name: "South Africa Number", price: 7000, flag: "https://flagcdn.com/w80/za.png" },
-  { name: "Kenya Number", price: 7000, flag: "https://flagcdn.com/w80/ke.png" },
-  { name: "Nigeria Number", price: 7000, flag: "https://flagcdn.com/w80/ng.png" },
-  { name: "Cameroon Number", price: 7000, flag: "https://flagcdn.com/w80/cm.png" },
-  { name: "Ghana Number", price: 7000, flag: "https://flagcdn.com/w80/gh.png" },
-  { name: "Egypt Number", price: 7000, flag: "https://flagcdn.com/w80/eg.png" },
+  {country:"USA", price:5000, flag:"https://flagcdn.com/us.svg"},
+  {country:"Canada", price:5000, flag:"https://flagcdn.com/ca.svg"},
+  {country:"Cuba", price:5000, flag:"https://flagcdn.com/cu.svg"},
+  {country:"Brazil", price:5000, flag:"https://flagcdn.com/br.svg"},
+  {country:"Ecuador", price:5000, flag:"https://flagcdn.com/ec.svg"},
+  {country:"India", price:4000, flag:"https://flagcdn.com/in.svg"},
+  {country:"Pakistan", price:4000, flag:"https://flagcdn.com/pk.svg"},
+  {country:"Philippines", price:4000, flag:"https://flagcdn.com/ph.svg"},
+  {country:"Indonesia", price:4000, flag:"https://flagcdn.com/id.svg"},
+  {country:"Kenya", price:5000, flag:"https://flagcdn.com/ke.svg"},
+  {country:"Uganda", price:5000, flag:"https://flagcdn.com/ug.svg"},
+  {country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
+  {country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
+  {country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
+  {country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"}
 ];
 
-// Render Products
-const productsContainer = document.getElementById('products-container');
-products.forEach((product, index) => {
-  const card = document.createElement('div');
-  card.className = 'product-card';
-  card.innerHTML = `
-    <img src="${product.flag}" alt="${product.name} Flag">
-    <h3>${product.name}</h3>
-    <p>₦${product.price.toLocaleString()}</p>
-    <button class="add-btn" onclick="addToCart(${index})">Add to Cart</button>
-  `;
-  productsContainer.appendChild(card);
-});
-
-// Cart Logic
+const productsDiv = document.getElementById("products");
+const cartDiv = document.getElementById("cart");
 let cart = [];
 
-const cartSidebar = document.getElementById('cart-sidebar');
-const cartToggle = document.getElementById('cart-toggle');
-const cartItemsEl = document.getElementById('cart-items');
-const cartCountEl = document.getElementById('cart-count');
-const cartTotalEl = document.getElementById('cart-total');
+function renderProducts() {
+  productsDiv.innerHTML = "";
+  products.forEach((p, index)=>{
+    productsDiv.innerHTML += `
+      <div class="product">
+        <img src="${p.flag}" alt="${p.country} flag">
+        <h3>${p.country}</h3>
+        <p>₦${p.price}</p>
+        <input type="number" id="qty${index}" value="1" min="1" style="width:50px;">
+        <br>
+        <button onclick="addToCart(${index})">Add to Cart</button>
+      </div>
+    `;
+  });
+}
 
-cartToggle.addEventListener('click', () => cartSidebar.classList.toggle('active'));
-
-function addToCart(index) {
-  const product = products[index];
-  cart.push(product);
+function addToCart(index){
+  const qty = parseInt(document.getElementById("qty"+index).value);
+  const item = products[index];
+  const existing = cart.find(c=>c.country===item.country);
+  if(existing){
+    existing.qty += qty;
+  } else {
+    cart.push({country:item.country, price:item.price, qty: qty});
+  }
   renderCart();
 }
 
-function removeFromCart(index) {
-  cart.splice(index, 1);
+function removeFromCart(country){
+  cart = cart.filter(c=>c.country !== country);
   renderCart();
 }
 
-function renderCart() {
-  cartItemsEl.innerHTML = '';
+function renderCart(){
+  cartDiv.innerHTML = "";
   let total = 0;
-  cart.forEach((item, i) => {
-    total += item.price;
-    const li = document.createElement('li');
-    li.innerHTML = `${item.name} - ₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeFromCart(${i})">Remove</button>`;
-    cartItemsEl.appendChild(li);
+  cart.forEach(c=>{
+    total += c.price * c.qty;
+    cartDiv.innerHTML += `<p>${c.country} x ${c.qty} = ₦${c.price*c.qty} <button onclick="removeFromCart('${c.country}')">Remove</button></p>`;
   });
-  cartTotalEl.textContent = `Total: ₦${total.toLocaleString()}`;
-  cartCountEl.textContent = cart.length;
+  document.getElementById("total").innerText = total;
 }
 
-// Payment Modal Logic
-const paymentModal = document.getElementById('payment-modal');
-const modalTotal = document.getElementById('modal-total');
-document.getElementById('checkout-btn').addEventListener('click', () => {
-  if(cart.length === 0){ alert("Your cart is empty!"); return; }
-  let total = cart.reduce((sum,item)=>sum+item.price,0);
-  modalTotal.textContent = `₦${total.toLocaleString()}`;
-  paymentModal.style.display = 'flex';
-});
+function checkout(){
+  if(cart.length===0){
+    alert("Cart is empty!");
+    return;
+  }
+  const paymentMethod = document.getElementById("payment").value;
+  let msg = `Payment Method: ${paymentMethod}\n\n`;
+  msg += `Account: 7030608002 (${paymentMethod})\nName: Wisdom Tochukwu Nwabugwu\n\n`;
+  msg += `Please send your payment proof on WhatsApp:\n`;
+  msg += "https://wa.me/2349157054608";
+  alert(msg);
+}
 
-document.getElementById('confirm-payment-btn').addEventListener('click', () => {
-  let message = "Hello, I have completed payment. My order:\n";
-  cart.forEach(item => {
-    message += `${item.name} - ₦${item.price}\n`;
-  });
-  const whatsappUrl = "https://wa.me/2349157054608?text=" + encodeURIComponent(message);
-  window.open(whatsappUrl, "_blank");
-  paymentModal.style.display = 'none';
-  cart = [];
-  renderCart();
-});
+renderProducts();
 </script>
 
 </body>
