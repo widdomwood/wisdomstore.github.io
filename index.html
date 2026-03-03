@@ -1,244 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wisdom Store</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
-  body {
-    font-family: Arial, sans-serif;
-    margin:0;
-    padding:0;
-    background:#f5f5f5;
-  }
-  header {
-    background:#fdbf00;
-    padding:20px;
-    text-align:center;
-    color:#fff;
-    font-size:24px;
-    font-weight:bold;
-    text-shadow:1px 1px #000;
-  }
-  .container {
-    max-width:1200px;
-    margin:auto;
-    padding:20px;
-  }
-  .products {
-    display:grid;
-    grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-    gap:20px;
-  }
-  .product {
-    background:white;
-    padding:10px;
-    border-radius:8px;
-    text-align:center;
-    box-shadow:0 2px 6px rgba(0,0,0,0.15);
-    transition:transform 0.2s;
-  }
-  .product:hover {
-    transform:translateY(-5px);
-  }
-  .product img {
-    width:80px;
-    height:50px;
-    margin-bottom:10px;
-  }
-  .product h3 {
-    margin:5px 0;
-    font-size:16px;
-  }
-  .product p {
-    font-size:14px;
-    color:#333;
-  }
-  .product input {
-    width:50px;
-    margin-top:5px;
-  }
-  .product button {
-    background:#fdbf00;
-    border:none;
-    color:#fff;
-    padding:8px 12px;
-    margin-top:5px;
-    cursor:pointer;
-    border-radius:5px;
-    font-weight:bold;
-  }
-  .product button:hover {
-    background:#ffa500;
-  }
-  .cart-section {
-    margin-top:30px;
-    background:white;
-    padding:15px;
-    border-radius:8px;
-    box-shadow:0 2px 6px rgba(0,0,0,0.15);
-  }
-  .cart-section h2 {
-    margin-top:0;
-  }
-  .cart-item {
-    display:flex;
-    justify-content:space-between;
-    margin:5px 0;
-  }
-  .cart-item button {
-    background:red;
-    padding:3px 8px;
-    border:none;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-  }
-  .payment-info {
-    background:#fff3cd;
-    padding:10px;
-    border:1px solid #ffeeba;
-    border-radius:5px;
-    margin-top:15px;
-  }
-  #checkoutBtn {
-    background:#fdbf00;
-    border:none;
-    color:#fff;
-    padding:10px 15px;
-    margin-top:10px;
-    cursor:pointer;
-    font-weight:bold;
-    border-radius:5px;
-  }
-  #checkoutBtn:hover {
-    background:#ffa500;
-  }
+body{font-family:Arial;background:#f2f2f2;margin:0;padding:0;}
+.header{background:#ff9900;color:white;padding:15px;text-align:center;font-size:22px;font-weight:bold;}
+.container{padding:20px;}
+.card{background:white;padding:15px;margin-bottom:20px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
+button{background:#ff9900;color:white;border:none;padding:8px 12px;border-radius:5px;margin-top:5px;cursor:pointer;}
+button:hover{background:#e68a00;}
+input{width:100%;padding:8px;margin-top:5px;margin-bottom:10px;}
+.ref{color:red;font-weight:bold;font-size:18px;}
+.warning{color:red;font-weight:bold;font-size:14px;}
 </style>
 </head>
 <body>
 
-<header>Wisdom Store - International Numbers</header>
+<div class="header">Wisdom Store</div>
+
 <div class="container">
 
-  <div class="products" id="products"></div>
+<div class="card">
+<h3>🛒 Cart Total</h3>
+<p>Total: ₦<span id="total">0</span></p>
+</div>
 
-  <div class="cart-section">
-    <h2>Cart</h2>
-    <div id="cart"></div>
-    <h3>Total: ₦<span id="total">0</span></h3>
+<div class="card">
+<h3>🌍 Available Numbers</h3>
 
-    <h3>Choose Payment Method</h3>
-    <select id="payment">
-      <option value="Opay">Opay</option>
-      <option value="Palmpay">Palmpay</option>
-      <option value="Paystack">Paystack</option>
-    </select>
+<p>🇺🇸 USA — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
+<p>🇧🇷 Brazil — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
+<p>🇩🇪 Germany — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
+<p>🇬🇧 UK — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
 
-    <div class="payment-info">
-      <strong>Account Number:</strong> 7030608002<br>
-      <strong>Name:</strong> Wisdom Tochukwu Nwabugwu<br>
-      <strong>Payment Method:</strong> Will use the one selected above
-    </div>
+<p>🇵🇰 Pakistan — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
+<p>🇵🇭 Philippines — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
+<p>🇮🇩 Indonesia — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
+<p>🇮🇳 India — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
 
-    <button id="checkoutBtn" onclick="paymentMade()">I Have Made Payment</button>
-  </div>
+<p>🌍 Other Countries — ₦8,000 <button onclick="addToCart(8000)">Add to Cart</button></p>
+
+</div>
+
+<div class="card">
+<h3>💳 Payment Details</h3>
+
+<p><strong>Bank:</strong> Opay</p>
+<p><strong>Account Number:</strong> 7030608002</p>
+<p><strong>Name:</strong> Wisdom Tochukwu Nwabugwu</p>
+
+<hr>
+
+<h3>Your Payment Reference Code:</h3>
+<p id="reference" class="ref"></p>
+
+<p class="warning">
+⚠️ Use this reference as payment description.<br>
+⚠️ Numbers will only be delivered after confirmation.<br>
+⚠️ Fake proof will lead to permanent ban.
+</p>
+
+</div>
+
+<div class="card">
+<h3>📤 Confirm Payment</h3>
+
+<label>Full Name</label>
+<input type="text" id="name" required>
+
+<label>Phone Number</label>
+<input type="text" id="phone" required>
+
+<label>Upload Payment Receipt</label>
+<input type="file" id="receipt" required>
+
+<button onclick="submitPayment()">Submit & Contact WhatsApp</button>
+
+</div>
 
 </div>
 
 <script>
-const products = [
-  {country:"USA", price:5000, flag:"https://flagcdn.com/us.svg"},
-  {country:"Canada", price:5000, flag:"https://flagcdn.com/ca.svg"},
-  {country:"Cuba", price:5000, flag:"https://flagcdn.com/cu.svg"},
-  {country:"Brazil", price:5000, flag:"https://flagcdn.com/br.svg"},
-  {country:"Ecuador", price:5000, flag:"https://flagcdn.com/ec.svg"},
-  {country:"India", price:4000, flag:"https://flagcdn.com/in.svg"},
-  {country:"Pakistan", price:4000, flag:"https://flagcdn.com/pk.svg"},
-  {country:"Philippines", price:4000, flag:"https://flagcdn.com/ph.svg"},
-  {country:"Indonesia", price:4000, flag:"https://flagcdn.com/id.svg"},
-  {country:"Kenya", price:5000, flag:"https://flagcdn.com/ke.svg"},
-  {country:"Uganda", price:5000, flag:"https://flagcdn.com/ug.svg"},
-  {country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
-  {country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
-  {country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
-  {country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"},
-  {country:"Ghana", price:5000, flag:"https://flagcdn.com/gh.svg"},
-  {country:"Germany", price:5000, flag:"https://flagcdn.com/de.svg"},
-  {country:"Italy", price:5000, flag:"https://flagcdn.com/it.svg"},
-  {country:"France", price:5000, flag:"https://flagcdn.com/fr.svg"},
-  {country:"Mexico", price:5000, flag:"https://flagcdn.com/mx.svg"},
-  {country:"Peru", price:5000, flag:"https://flagcdn.com/pe.svg"},
-  {country:"Russia", price:5000, flag:"https://flagcdn.com/ru.svg"},
-  {country:"Australia", price:5000, flag:"https://flagcdn.com/au.svg"},
-  {country:"Greece", price:5000, flag:"https://flagcdn.com/gr.svg"}
-];
 
-const productsDiv = document.getElementById("products");
-const cartDiv = document.getElementById("cart");
-let cart = [];
+let totalAmount = 0;
 
-function renderProducts() {
-  productsDiv.innerHTML = "";
-  products.forEach((p, index)=>{
-    productsDiv.innerHTML += `
-      <div class="product">
-        <img src="${p.flag}" alt="${p.country} flag">
-        <h3>${p.country}</h3>
-        <p>₦${p.price}</p>
-        <input type="number" id="qty${index}" value="1" min="1">
-        <br>
-        <button onclick="addToCart(${index})">Add to Cart</button>
-      </div>
-    `;
-  });
+function addToCart(amount){
+    totalAmount += amount;
+    document.getElementById("total").innerText = totalAmount;
 }
 
-function addToCart(index){
-  const qty = parseInt(document.getElementById("qty"+index).value);
-  const item = products[index];
-  const existing = cart.find(c=>c.country===item.country);
-  if(existing){
-    existing.qty += qty;
-  } else {
-    cart.push({country:item.country, price:item.price, qty: qty});
-  }
-  renderCart();
+function generateReference(){
+    const randomNum = Math.floor(10000 + Math.random() * 90000);
+    const ref = "WIS" + randomNum;
+    document.getElementById("reference").innerText = ref;
+    localStorage.setItem("paymentRef", ref);
 }
 
-function removeFromCart(country){
-  cart = cart.filter(c=>c.country !== country);
-  renderCart();
+function submitPayment(){
+    const name = document.getElementById("name").value;
+    const phone = document.getElementById("phone").value;
+    const receipt = document.getElementById("receipt").value;
+    const ref = localStorage.getItem("paymentRef");
+
+    if(name === "" || phone === "" || receipt === ""){
+        alert("Please fill all fields and upload receipt before continuing.");
+        return;
+    }
+
+    const message = 
+    "Hello, I have made payment.\n\n" +
+    "Name: " + name + "\n" +
+    "Phone: " + phone + "\n" +
+    "Total Paid: ₦" + totalAmount + "\n" +
+    "Reference Code: " + ref;
+
+    const phoneNumber = "2349157054608";
+    const url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
+
+    window.location.href = url;
 }
 
-function renderCart(){
-  cartDiv.innerHTML = "";
-  let total = 0;
-  cart.forEach(c=>{
-    total += c.price * c.qty;
-    cartDiv.innerHTML += `
-      <div class="cart-item">
-        <span>${c.country} x ${c.qty} = ₦${c.price*c.qty}</span>
-        <button onclick="removeFromCart('${c.country}')">Remove</button>
-      </div>
-    `;
-  });
-  document.getElementById("total").innerText = total;
-}
+window.onload = generateReference;
 
-function paymentMade(){
-  if(cart.length===0){
-    alert("Your cart is empty!");
-    return;
-  }
-  const paymentMethod = document.getElementById("payment").value;
-  const total = document.getElementById("total").innerText;
-  const message = `Hello, I have made payment for my order via ${paymentMethod}.\n\nAccount: 7030608002 (${paymentMethod})\nName: Wisdom Tochukwu Nwabugwu\nTotal: ₦${total}`;
-  const url = "https://wa.me/2349157054608?text=" + encodeURIComponent(message);
-  window.location.href = url;
-}
-
-renderProducts();
 </script>
 
 </body>
