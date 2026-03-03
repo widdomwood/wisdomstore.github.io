@@ -1,89 +1,37 @@
-<!DOCTYPE html>
+    <!DOCTYPE html>
 <html>
 <head>
   <title>Wisdom Digital Store</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background-color: #f5f5f5;
-    }
-
-    header {
-      background: orange;
-      padding: 15px;
-      color: white;
-      text-align: center;
-      font-size: 22px;
-      font-weight: bold;
-    }
-
-    .container {
-      padding: 15px;
-    }
-
-    .products {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 15px;
-    }
-
-    .product {
-      background: white;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-      text-align: center;
-    }
-
-    .product h3 {
-      margin: 5px 0;
-    }
-
-    .price {
-      color: green;
-      font-weight: bold;
-      margin: 8px 0;
-    }
-
-    button {
-      background: orange;
-      color: white;
-      padding: 8px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    button:hover {
-      background: darkorange;
-    }
-
-    .checkout {
-      background: white;
-      margin-top: 20px;
-      padding: 15px;
-      border-radius: 8px;
-      box-shadow: 0 0 8px rgba(0,0,0,0.1);
-    }
-
-    .whatsapp-btn {
-      background: green;
-      margin-top: 10px;
-    }
-
-    .whatsapp-btn:hover {
-      background: darkgreen;
-    }
+    body { margin:0; font-family: Arial; background:#f5f5f5; }
+    header { background:orange; padding:15px; color:white; text-align:center; font-size:22px; font-weight:bold; position:relative; }
+    .cart-counter { position:absolute; right:20px; top:15px; background:green; color:white; padding:5px 10px; border-radius:50%; font-weight:bold; }
+    .container { padding:15px; }
+    .promo { background:yellow; padding:10px; text-align:center; font-weight:bold; margin-bottom:10px; }
+    .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; }
+    .product { background:white; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); text-align:center; }
+    .product h3 { margin:5px 0; }
+    .price { color:green; font-weight:bold; margin:8px 0; }
+    button { background:orange; color:white; padding:8px; border:none; border-radius:5px; cursor:pointer; width:100%; margin-top:5px; }
+    button:hover { background:darkorange; }
+    .checkout { background:white; margin-top:20px; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
+    .whatsapp-btn { background:green; margin-top:10px; }
+    .whatsapp-btn:hover { background:darkgreen; }
+    .reviews { background:white; padding:10px; margin-top:20px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
+    .reviews p { margin:5px 0; font-style:italic; }
   </style>
 </head>
 <body>
 
-<header>Wisdom Digital Store</header>
+<header>
+  Wisdom Digital Store
+  <div class="cart-counter" id="cartCount">0</div>
+</header>
 
 <div class="container">
+
+<div class="promo">🔥 PROMO: Limited offer on USA & UK Numbers! 🔥</div>
 
 <div class="products">
 
@@ -139,28 +87,78 @@
   <a href="https://wa.me/2349157054608?text=Hello%20I%20have%20made%20payment.%20Here%20is%20my%20proof." target="_blank">
     <button class="whatsapp-btn">Send Proof on WhatsApp</button>
   </a>
+
+  <p id="orderID" style="margin-top:10px; font-weight:bold;"></p>
+</div>
+
+<div class="reviews">
+  <h3>Customer Reviews ⭐⭐⭐⭐⭐</h3>
+  <p>“Fast delivery and legit numbers!” – Daniel</p>
+  <p>“Trusted seller. Highly recommend.” – Mary</p>
+  <p>“Smooth transaction, will buy again.” – John</p>
 </div>
 
 </div>
 
 <script>
-  let total = 0;
-  let cart = [];
+let total = 0;
+let cart = [];
 
-  function addToCart(price, name) {
-    total += price;
-    cart.push(name);
+function addToCart(price, name) {
+  total += price;
+  cart.push(name);
 
-    document.getElementById("total").innerText = total;
+  // Update cart count
+  document.getElementById('cartCount').innerText = cart.length;
 
-    let cartList = document.getElementById("cartList");
-    cartList.innerHTML = '';
-    cart.forEach(item => {
-      let li = document.createElement("li");
-      li.textContent = item;
-      cartList.appendChild(li);
-    });
-  }
+  // Update cart list
+  let cartList = document.getElementById("cartList");
+  cartList.innerHTML = '';
+  cart.forEach((item, index) => {
+    let li = document.createElement("li");
+    li.textContent = item + " ";
+    // Remove button
+    let removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.style.background = "red";
+    removeBtn.style.color = "white";
+    removeBtn.style.padding = "2px 5px";
+    removeBtn.style.marginLeft = "5px";
+    removeBtn.onclick = function() { removeFromCart(index, price); }
+    li.appendChild(removeBtn);
+    cartList.appendChild(li);
+  });
+
+  // Generate Order ID
+  let orderID = 'WD-' + Math.floor(Math.random() * 100000);
+  document.getElementById("orderID").innerText = "Your Order ID: " + orderID;
+
+  // Update total
+  document.getElementById("total").innerText = total;
+}
+
+function removeFromCart(index, price) {
+  total -= price;
+  cart.splice(index,1);
+  document.getElementById("cartCount").innerText = cart.length;
+  document.getElementById("total").innerText = total;
+
+  let cartList = document.getElementById("cartList");
+  cartList.innerHTML = '';
+  cart.forEach((item, i) => {
+    let li = document.createElement("li");
+    li.textContent = item + " ";
+    let removeBtn = document.createElement("button");
+    removeBtn.textContent = "Remove";
+    removeBtn.style.background = "red";
+    removeBtn.style.color = "white";
+    removeBtn.style.padding = "2px 5px";
+    removeBtn.style.marginLeft = "5px";
+    removeBtn.onclick = function() { removeFromCart(i, 0); }
+    li.appendChild(removeBtn);
+    cartList.appendChild(li);
+  });
+}
 </script>
 
 </body>
