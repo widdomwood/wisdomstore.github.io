@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 <head>
   <title>Wisdom Digital Store</title>
@@ -10,7 +10,8 @@
     .container { padding:15px; }
     .promo { background:yellow; padding:10px; text-align:center; font-weight:bold; margin-bottom:10px; }
     .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; }
-    .product { background:white; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); text-align:center; }
+    .product { background:white; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); text-align:center; position:relative; }
+    .product img { width:64px; height:40px; margin-bottom:8px; }
     .product h3 { margin:5px 0; }
     .price { color:green; font-weight:bold; margin:8px 0; }
     button { background:orange; color:white; padding:8px; border:none; border-radius:5px; cursor:pointer; width:100%; margin-top:5px; }
@@ -18,8 +19,9 @@
     .checkout { background:white; margin-top:20px; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
     .whatsapp-btn { background:green; margin-top:10px; }
     .whatsapp-btn:hover { background:darkgreen; }
-    .reviews { background:white; padding:10px; margin-top:20px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
-    .reviews p { margin:5px 0; font-style:italic; }
+    .reviews, .how-it-works { background:white; padding:10px; margin-top:20px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
+    .reviews p, .how-it-works p { margin:5px 0; font-style:italic; }
+    footer { background:#333; color:white; padding:10px; text-align:center; margin-top:20px; font-size:14px; }
   </style>
 </head>
 <body>
@@ -31,44 +33,50 @@
 
 <div class="container">
 
-<div class="promo">🔥 PROMO: Limited offer on USA & UK Numbers! 🔥</div>
+<div class="promo">🔥 PROMO: Limited offer on USA & UK Numbers! Use code <strong>WISDOM10</strong> for ₦500 off!</div>
 
 <div class="products">
 
   <div class="product">
+    <img src="https://flagcdn.com/us.svg" alt="USA Flag">
     <h3>🇺🇸 USA Number</h3>
     <div class="price">₦5,000</div>
-    <button onclick="addToCart(5000, 'USA Number')">Add to Cart</button>
+    <button onclick="addToCart(5000, 'USA Number', 10)">Add to Cart</button>
   </div>
 
   <div class="product">
+    <img src="https://flagcdn.com/gb.svg" alt="UK Flag">
     <h3>🇬🇧 UK Number</h3>
     <div class="price">₦5,000</div>
-    <button onclick="addToCart(5000, 'UK Number')">Add to Cart</button>
+    <button onclick="addToCart(5000, 'UK Number', 10)">Add to Cart</button>
   </div>
 
   <div class="product">
+    <img src="https://flagcdn.com/ph.svg" alt="Philippines Flag">
     <h3>🇵🇭 Philippines</h3>
     <div class="price">₦4,000</div>
-    <button onclick="addToCart(4000, 'Philippines Number')">Add to Cart</button>
+    <button onclick="addToCart(4000, 'Philippines Number', 5)">Add to Cart</button>
   </div>
 
   <div class="product">
+    <img src="https://flagcdn.com/id.svg" alt="Indonesia Flag">
     <h3>🇮🇩 Indonesia</h3>
     <div class="price">₦4,000</div>
-    <button onclick="addToCart(4000, 'Indonesia Number')">Add to Cart</button>
+    <button onclick="addToCart(4000, 'Indonesia Number', 5)">Add to Cart</button>
   </div>
 
   <div class="product">
+    <img src="https://flagcdn.com/sa.svg" alt="Saudi Flag">
     <h3>🇸🇦 Saudi Arabia</h3>
     <div class="price">₦10,000</div>
-    <button onclick="addToCart(10000, 'Saudi Number')">Add to Cart</button>
+    <button onclick="addToCart(10000, 'Saudi Number', 3)">Add to Cart</button>
   </div>
 
   <div class="product">
+    <img src="https://cdn-icons-png.flaticon.com/512/149/149059.png" alt="Other">
     <h3>🌍 Other Countries</h3>
     <div class="price">₦7,000</div>
-    <button onclick="addToCart(7000, 'Other Country Number')">Add to Cart</button>
+    <button onclick="addToCart(7000, 'Other Country Number', 7)">Add to Cart</button>
   </div>
 
 </div>
@@ -77,7 +85,6 @@
   <h2>Checkout</h2>
   <p><strong>Items:</strong></p>
   <ul id="cartList"></ul>
-
   <p><strong>Total: ₦<span id="total">0</span></strong></p>
 
   <p><strong>Payment Method:</strong> Opay</p>
@@ -98,66 +105,66 @@
   <p>“Smooth transaction, will buy again.” – John</p>
 </div>
 
+<div class="how-it-works">
+  <h3>How It Works</h3>
+  <p>1️⃣ Add your desired number(s) to the cart</p>
+  <p>2️⃣ Make payment to Opay account listed above</p>
+  <p>3️⃣ Send proof of payment via WhatsApp</p>
+  <p>4️⃣ Receive your number and order confirmation</p>
 </div>
+
+<footer>
+  Contact us: <a href="https://wa.me/2349157054608" style="color:white;">WhatsApp</a> | Email: wisdom@example.com
+  <br>© 2026 Wisdom Store
+</footer>
 
 <script>
 let total = 0;
 let cart = [];
+let stock = [10,10,5,5,3,7]; // stock for each product
 
-function addToCart(price, name) {
+function addToCart(price, name, index) {
+  if(stock[index] <= 0) {
+    alert(name + " is out of stock!");
+    return;
+  }
   total += price;
-  cart.push(name);
+  cart.push({name:name, price:price, index:index});
+  stock[index]--;
 
-  // Update cart count
-  document.getElementById('cartCount').innerText = cart.length;
-
-  // Update cart list
-  let cartList = document.getElementById("cartList");
-  cartList.innerHTML = '';
-  cart.forEach((item, index) => {
-    let li = document.createElement("li");
-    li.textContent = item + " ";
-    // Remove button
-    let removeBtn = document.createElement("button");
-    removeBtn.textContent = "Remove";
-    removeBtn.style.background = "red";
-    removeBtn.style.color = "white";
-    removeBtn.style.padding = "2px 5px";
-    removeBtn.style.marginLeft = "5px";
-    removeBtn.onclick = function() { removeFromCart(index, price); }
-    li.appendChild(removeBtn);
-    cartList.appendChild(li);
-  });
-
-  // Generate Order ID
-  let orderID = 'WD-' + Math.floor(Math.random() * 100000);
-  document.getElementById("orderID").innerText = "Your Order ID: " + orderID;
-
-  // Update total
-  document.getElementById("total").innerText = total;
+  updateCart();
 }
 
-function removeFromCart(index, price) {
-  total -= price;
-  cart.splice(index,1);
-  document.getElementById("cartCount").innerText = cart.length;
+function removeFromCart(i) {
+  let item = cart[i];
+  total -= item.price;
+  stock[item.index]++;
+  cart.splice(i,1);
+  updateCart();
+}
+
+function updateCart() {
+  document.getElementById('cartCount').innerText = cart.length;
   document.getElementById("total").innerText = total;
 
   let cartList = document.getElementById("cartList");
   cartList.innerHTML = '';
-  cart.forEach((item, i) => {
+  cart.forEach((item,i) => {
     let li = document.createElement("li");
-    li.textContent = item + " ";
+    li.textContent = item.name + " ";
     let removeBtn = document.createElement("button");
     removeBtn.textContent = "Remove";
     removeBtn.style.background = "red";
     removeBtn.style.color = "white";
     removeBtn.style.padding = "2px 5px";
     removeBtn.style.marginLeft = "5px";
-    removeBtn.onclick = function() { removeFromCart(i, 0); }
+    removeBtn.onclick = function() { removeFromCart(i); }
     li.appendChild(removeBtn);
     cartList.appendChild(li);
   });
+
+  let orderID = 'WD-' + Math.floor(Math.random()*100000);
+  document.getElementById("orderID").innerText = "Your Order ID: " + orderID;
 }
 </script>
 
