@@ -1,129 +1,314 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Wisdom Store</title>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wisdom Store</title>
 <style>
-body{font-family:Arial;background:#f2f2f2;margin:0;padding:0;}
-.header{background:#ff9900;color:white;padding:15px;text-align:center;font-size:22px;font-weight:bold;}
-.container{padding:20px;}
-.card{background:white;padding:15px;margin-bottom:20px;border-radius:8px;box-shadow:0 2px 5px rgba(0,0,0,0.1);}
-button{background:#ff9900;color:white;border:none;padding:8px 12px;border-radius:5px;margin-top:5px;cursor:pointer;}
-button:hover{background:#e68a00;}
-input{width:100%;padding:8px;margin-top:5px;margin-bottom:10px;}
-.ref{color:red;font-weight:bold;font-size:18px;}
-.warning{color:red;font-weight:bold;font-size:14px;}
+body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; }
+header { background:#fdbf00; padding:20px; text-align:center; color:#fff; font-size:24px; font-weight:bold; text-shadow:1px 1px #000; }
+.container { max-width:1200px; margin:auto; padding:20px; }
+.hidden { display:none; }
+.products { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:20px; }
+.product { background:white; padding:10px; border-radius:8px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition:transform 0.2s; }
+.product:hover { transform:translateY(-5px); }
+.product img { width:80px; height:50px; margin-bottom:10px; }
+.product h3 { margin:5px 0; font-size:16px; }
+.product p { font-size:14px; color:#333; }
+.product input { width:50px; margin-top:5px; }
+.product button { background:#fdbf00; border:none; color:#fff; padding:8px 12px; margin-top:5px; cursor:pointer; border-radius:5px; font-weight:bold; }
+.product button:hover { background:#ffa500; }
+.cart-section { margin-top:30px; background:white; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.15); }
+.cart-section h2 { margin-top:0; }
+.cart-item { display:flex; justify-content:space-between; margin:5px 0; }
+.cart-item button { background:red; padding:3px 8px; border:none; color:white; border-radius:5px; cursor:pointer; }
+.payment-info { background:#fff3cd; padding:10px; border:1px solid #ffeeba; border-radius:5px; margin-top:15px; }
+#checkoutBtn { background:#fdbf00; border:none; color:#fff; padding:10px 15px; margin-top:10px; cursor:pointer; font-weight:bold; border-radius:5px; }
+#checkoutBtn:hover { background:#ffa500; }
+.form-section { margin-bottom:20px; }
+input, select { padding:5px; margin:5px 0; width:100%; }
+button { cursor:pointer; }
+table { width:100%; border-collapse:collapse; margin-top:20px; }
+th, td { border:1px solid #ccc; padding:10px; text-align:left; }
+th { background:#fdbf00; color:#fff; }
 </style>
 </head>
 <body>
 
-<div class="header">Wisdom Store</div>
-
+<header>Wisdom Store - International Numbers</header>
 <div class="container">
 
-<div class="card">
-<h3>🛒 Cart Total</h3>
-<p>Total: ₦<span id="total">0</span></p>
+<!-- Registration/Login Section -->
+<div id="authSection" class="form-section">
+<h2>User Account</h2>
+<div id="registerDiv">
+<h3>Register</h3>
+<input type="text" id="regEmail" placeholder="Email"><br>
+<input type="password" id="regPass" placeholder="Password"><br>
+<button onclick="register()">Register</button>
+<p>Already have account? <a href="#" onclick="showLogin()">Login</a></p>
+</div>
+<div id="loginDiv" class="hidden">
+<h3>Login</h3>
+<input type="text" id="loginEmail" placeholder="Email"><br>
+<input type="password" id="loginPass" placeholder="Password"><br>
+<input type="password" id="adminPass" placeholder="Admin Password (Optional)"><br>
+<button onclick="login()">Login</button>
+<p>Forgot password? <a href="#" onclick="showForgot()">Reset</a></p>
+<p>Don't have account? <a href="#" onclick="showRegister()">Register</a></p>
+</div>
+<div id="forgotDiv" class="hidden">
+<h3>Forgot Password</h3>
+<input type="text" id="forgotEmail" placeholder="Enter your email"><br>
+<button onclick="sendResetCode()">Send Reset Code</button>
+<input type="text" id="resetCodeInput" placeholder="Enter code" class="hidden"><br>
+<input type="password" id="newPassword" placeholder="New password" class="hidden"><br>
+<button onclick="resetPassword()" id="resetBtn" class="hidden">Reset Password</button>
+<p><a href="#" onclick="showLogin()">Back to Login</a></p>
+</div>
 </div>
 
-<div class="card">
-<h3>🌍 Available Numbers</h3>
+<!-- Store Section -->
+<div id="storeSection" class="hidden">
+<h2>Welcome, <span id="userEmailDisplay"></span> <button onclick="logout()">Logout</button></h2>
+<div class="products" id="products"></div>
 
-<p>🇺🇸 USA — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
-<p>🇧🇷 Brazil — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
-<p>🇩🇪 Germany — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
-<p>🇬🇧 UK — ₦5,000 <button onclick="addToCart(5000)">Add to Cart</button></p>
+<div class="cart-section">
+<h2>Cart</h2>
+<div id="cart"></div>
+<h3>Total: ₦<span id="total">0</span></h3>
 
-<p>🇵🇰 Pakistan — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
-<p>🇵🇭 Philippines — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
-<p>🇮🇩 Indonesia — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
-<p>🇮🇳 India — ₦4,000 <button onclick="addToCart(4000)">Add to Cart</button></p>
+<h3>Choose Payment Method</h3>
+<select id="payment">
+<option value="Opay">Opay</option>
+<option value="Palmpay">Palmpay</option>
+<option value="Paystack">Paystack</option>
+</select>
 
-<p>🌍 Other Countries — ₦8,000 <button onclick="addToCart(8000)">Add to Cart</button></p>
-
+<div class="payment-info">
+<strong>Account Number:</strong> 7030608002<br>
+<strong>Name:</strong> Wisdom Tochukwu Nwabugwu
 </div>
 
-<div class="card">
-<h3>💳 Payment Details</h3>
-
-<p><strong>Bank:</strong> Opay</p>
-<p><strong>Account Number:</strong> 7030608002</p>
-<p><strong>Name:</strong> Wisdom Tochukwu Nwabugwu</p>
-
-<hr>
-
-<h3>Your Payment Reference Code:</h3>
-<p id="reference" class="ref"></p>
-
-<p class="warning">
-⚠️ Use this reference as payment description.<br>
-⚠️ Numbers will only be delivered after confirmation.<br>
-⚠️ Fake proof will lead to permanent ban.
-</p>
-
+<div class="form-section">
+<h3>Confirm Payment</h3>
+<input type="text" id="payerName" placeholder="Your Name"><br>
+<input type="text" id="payerPhone" placeholder="Phone Number"><br>
+<input type="file" id="receipt" accept="image/*"><br>
 </div>
 
-<div class="card">
-<h3>📤 Confirm Payment</h3>
+<button id="checkoutBtn" onclick="paymentMade()">I Have Made Payment</button>
+</div>
 
-<label>Full Name</label>
-<input type="text" id="name" required>
-
-<label>Phone Number</label>
-<input type="text" id="phone" required>
-
-<label>Upload Payment Receipt</label>
-<input type="file" id="receipt" required>
-
-<button onclick="submitPayment()">Submit & Contact WhatsApp</button>
-
+<!-- Admin Panel -->
+<div id="adminSection" class="hidden">
+<h2>Admin View - Users & Purchases</h2>
+<table id="usersTable">
+<tr>
+<th>Email</th>
+<th>Cart Items</th>
+<th>Total</th>
+<th>Payer Name</th>
+<th>Payer Phone</th>
+<th>Receipt File</th>
+<th>Action</th>
+</tr>
+</table>
 </div>
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
 <script>
+emailjs.init("auWJGhokNvCvWyldO");
 
-let totalAmount = 0;
+// ----------- Account System -----------
+let accounts = JSON.parse(localStorage.getItem("accounts")||"{}");
+let cartsPerUser = JSON.parse(localStorage.getItem("cartsPerUser")||"{}");
+let paymentInfo = JSON.parse(localStorage.getItem("paymentInfo")||"{}");
+let currentUser = localStorage.getItem("currentUser")||"";
+let adminPassword = "admin123"; 
+let isAdmin=false;
 
-function addToCart(amount){
-    totalAmount += amount;
-    document.getElementById("total").innerText = totalAmount;
+function showStore(){
+document.getElementById("authSection").classList.add("hidden");
+document.getElementById("storeSection").classList.remove("hidden");
+document.getElementById("userEmailDisplay").innerText = currentUser;
+renderProducts();
+renderCart();
+if(isAdmin){document.getElementById("adminSection").classList.remove("hidden"); renderAdmin();}
 }
 
-function generateReference(){
-    const randomNum = Math.floor(10000 + Math.random() * 90000);
-    const ref = "WIS" + randomNum;
-    document.getElementById("reference").innerText = ref;
-    localStorage.setItem("paymentRef", ref);
+function showRegister(){document.getElementById("registerDiv").classList.remove("hidden");document.getElementById("loginDiv").classList.add("hidden");document.getElementById("forgotDiv").classList.add("hidden");}
+function showLogin(){document.getElementById("loginDiv").classList.remove("hidden");document.getElementById("registerDiv").classList.add("hidden");document.getElementById("forgotDiv").classList.add("hidden");}
+function showForgot(){document.getElementById("forgotDiv").classList.remove("hidden");document.getElementById("loginDiv").classList.add("hidden");document.getElementById("registerDiv").classList.add("hidden");}
+
+function register(){
+const email=document.getElementById("regEmail").value;
+const pass=document.getElementById("regPass").value;
+if(email&&pass){
+if(accounts[email]){alert("Account exists!"); return;}
+accounts[email]=pass;
+cartsPerUser[email]=[];
+localStorage.setItem("accounts",JSON.stringify(accounts));
+localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));
+alert("Registered! Login now."); showLogin();
+}else{alert("Fill all fields");}
 }
 
-function submitPayment(){
-    const name = document.getElementById("name").value;
-    const phone = document.getElementById("phone").value;
-    const receipt = document.getElementById("receipt").value;
-    const ref = localStorage.getItem("paymentRef");
-
-    if(name === "" || phone === "" || receipt === ""){
-        alert("Please fill all fields and upload receipt before continuing.");
-        return;
-    }
-
-    const message = 
-    "Hello, I have made payment.\n\n" +
-    "Name: " + name + "\n" +
-    "Phone: " + phone + "\n" +
-    "Total Paid: ₦" + totalAmount + "\n" +
-    "Reference Code: " + ref;
-
-    const phoneNumber = "2349157054608";
-    const url = "https://wa.me/" + phoneNumber + "?text=" + encodeURIComponent(message);
-
-    window.location.href = url;
+function login(){
+const email=document.getElementById("loginEmail").value;
+const pass=document.getElementById("loginPass").value;
+const adminPassInput=document.getElementById("adminPass").value;
+if(accounts[email]&&accounts[email]===pass){
+currentUser=email;
+localStorage.setItem("currentUser",currentUser);
+if(adminPassInput===adminPassword){isAdmin=true;}else{isAdmin=false;}
+showStore();
+}else{alert("Invalid credentials");}
 }
 
-window.onload = generateReference;
+function logout(){
+currentUser=""; localStorage.removeItem("currentUser");
+isAdmin=false;
+document.getElementById("storeSection").classList.add("hidden");
+document.getElementById("adminSection").classList.add("hidden");
+document.getElementById("authSection").classList.remove("hidden");
+}
 
+// ----------- Forgot Password -----------
+let resetCode="";
+const SERVICE_ID="wisdomwood", TEMPLATE_ID="template_qvusfvn";
+
+function sendResetCode(){
+const email=document.getElementById("forgotEmail").value;
+if(!accounts[email]){alert("No account with this email"); return;}
+resetCode=Math.floor(100000+Math.random()*900000).toString();
+emailjs.send(SERVICE_ID,TEMPLATE_ID,{to_email:email,code:resetCode})
+.then(()=>{alert("Reset code sent to your email");
+document.getElementById("resetCodeInput").classList.remove("hidden");
+document.getElementById("newPassword").classList.remove("hidden");
+document.getElementById("resetBtn").classList.remove("hidden");},err=>{alert("Error sending email: "+err);});
+}
+
+function resetPassword(){
+const code=document.getElementById("resetCodeInput").value;
+const newPass=document.getElementById("newPassword").value;
+const email=document.getElementById("forgotEmail").value;
+if(code===resetCode){
+accounts[email]=newPass;
+localStorage.setItem("accounts",JSON.stringify(accounts));
+alert("Password reset successful! Login now.");
+showLogin();
+}else{alert("Invalid code");}
+}
+
+// ----------- Store Products -----------
+const products = [
+{country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"},
+{country:"Kenya", price:5000, flag:"https://flagcdn.com/ke.svg"},
+{country:"Ghana", price:5000, flag:"https://flagcdn.com/gh.svg"},
+{country:"Uganda", price:5000, flag:"https://flagcdn.com/ug.svg"},
+{country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
+{country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
+{country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
+{country:"USA", price:5000, flag:"https://flagcdn.com/us.svg"},
+{country:"Canada", price:5000, flag:"https://flagcdn.com/ca.svg"},
+{country:"India", price:4000, flag:"https://flagcdn.com/in.svg"},
+{country:"Pakistan", price:4000, flag:"https://flagcdn.com/pk.svg"},
+{country:"Philippines", price:4000, flag:"https://flagcdn.com/ph.svg"},
+{country:"Indonesia", price:4000, flag:"https://flagcdn.com/id.svg"}
+];
+
+function renderProducts(){
+const productsDiv=document.getElementById("products");
+productsDiv.innerHTML="";
+products.forEach((p,index)=>{
+productsDiv.innerHTML+=`
+<div class="product">
+<img src="${p.flag}" alt="${p.country} flag">
+<h3>${p.country}</h3>
+<p>₦${p.price}</p>
+<input type="number" id="qty${index}" value="1" min="1"><br>
+<button onclick="addToCart(${index})">Add to Cart</button>
+</div>`;
+});
+}
+
+function addToCart(index){
+const qty=parseInt(document.getElementById("qty"+index).value);
+const item=products[index];
+const userCart = cartsPerUser[currentUser]||[];
+const existing=userCart.find(c=>c.country===item.country);
+if(existing){existing.qty+=qty;}else{userCart.push({country:item.country,price:item.price,qty:qty});}
+cartsPerUser[currentUser]=userCart;
+localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));
+renderCart();
+}
+
+function removeFromCart(country){
+let userCart=cartsPerUser[currentUser];
+userCart=userCart.filter(c=>c.country!==country);
+cartsPerUser[currentUser]=userCart;
+localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));
+renderCart();
+}
+
+function renderCart(){
+const cartDiv=document.getElementById("cart");
+cartDiv.innerHTML="";
+let total=0;
+let userCart=cartsPerUser[currentUser]||[];
+userCart.forEach(c=>{
+total+=c.price*c.qty;
+cartDiv.innerHTML+=`<div class="cart-item"><span>${c.country} x ${c.qty} = ₦${c.price*c.qty}</span>
+<button onclick="removeFromCart('${c.country}')">Remove</button></div>`;
+});
+document.getElementById("total").innerText=total;
+}
+
+function paymentMade(){
+let userCart=cartsPerUser[currentUser]||[];
+if(userCart.length===0){alert("Cart empty"); return;}
+const name=document.getElementById("payerName").value;
+const phone=document.getElementById("payerPhone").value;
+const receipt=document.getElementById("receipt").files[0];
+if(!name||!phone||!receipt){alert("Fill name, phone, and upload receipt"); return;}
+paymentInfo[currentUser]={name,phone,receipt:receipt.name};
+localStorage.setItem("paymentInfo",JSON.stringify(paymentInfo));
+const paymentMethod=document.getElementById("payment").value;
+const total=document.getElementById("total").innerText;
+const message=`Hello, I have made payment via ${paymentMethod}.\nName: ${name}\nPhone: ${phone}\nTotal: ${total}`;
+const url="https://wa.me/2349157054608?text="+encodeURIComponent(message);
+window.location.href=url;
+}
+
+// ----------- Admin Rendering -----------
+function renderAdmin(){
+let table=document.getElementById("usersTable");
+table.innerHTML=`<tr>
+<th>Email</th><th>Cart Items</th><th>Total</th><th>Payer Name</th><th>Payer Phone</th><th>Receipt File</th><th>Action</th></tr>`;
+for(let email in accounts){
+let userCart=cartsPerUser[email]||[];
+let total=userCart.reduce((sum,item)=>sum+item.price*item.qty,0);
+let info=paymentInfo[email]||{};
+let row=table.insertRow();
+row.insertCell(0).innerText=email;
+row.insertCell(1).innerText=userCart.map(c=>c.country+" x"+c.qty).join(", ");
+row.insertCell(2).innerText="₦"+total;
+row.insertCell(3).innerText=info.name||"";
+row.insertCell(4).innerText=info.phone||"";
+row.insertCell(5).innerText=info.receipt||"";
+let delBtn=document.createElement("button");
+delBtn.innerText="Remove";
+delBtn.onclick=function(){if(confirm("Delete this user?")){delete accounts[email];delete cartsPerUser[email];delete paymentInfo[email];localStorage.setItem("accounts",JSON.stringify(accounts));localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));localStorage.setItem("paymentInfo",JSON.stringify(paymentInfo));renderAdmin();}};
+row.insertCell(6).appendChild(delBtn);
+}
+
+}
+
+if(currentUser){showStore();}
 </script>
 
 </body>
-</html>
+                                                                               </html>
