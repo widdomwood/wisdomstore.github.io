@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Wisdom Online Store</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+
+    .product {
+      background: white;
+      padding: 15px;
+      margin: 15px 0;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    button {
+      background-color: green;
+      color: white;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: darkgreen;
+    }
+
+    .checkout {
+      background: white;
+      padding: 15px;
+      margin-top: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Welcome to Wisdom Store</h1>
+
+<div class="product">
+  <h2>Smart Watch</h2>
+  <p>High quality smart watch with long battery life.</p>
+  <p><strong>Price: ₦5000</strong></p>
+  <button onclick="addToCart()">Add to Cart</button>
+</div>
+
+<div class="checkout">
+  <h2>Checkout</h2>
+  <p>Total: ₦<span id="total">0</span></p>
+  <p>Please transfer to:</p>
+  <ul>
+    <li><strong>Bank:</strong> Your Bank Name</li>
+    <li><strong>Account Name:</strong> Wisdom N.</li>
+    <li><strong>Account Number:</strong> 1234567890</li>
+  </ul>
+</div>
+
+<script>
+  let total = 0;
+
+  function addToCart() {
+    total += 5000;
+    document.getElementById("total").innerText = total;
+  }
+</script>
+
+</body>
+                                             </html>
