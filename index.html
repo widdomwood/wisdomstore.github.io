@@ -10,6 +10,7 @@
   .product img { width:50px; height:30px; }
   .cart { margin-top:20px; }
   button { padding:5px 10px; margin-top:5px; cursor:pointer; }
+  .payment-info { margin:10px 0; padding:10px; border:1px dashed #888; background:#fff; border-radius:5px; }
 </style>
 </head>
 <body>
@@ -28,6 +29,12 @@
   <option value="Palmpay">Palmpay</option>
   <option value="Paystack">Paystack</option>
 </select>
+
+<div class="payment-info">
+  <strong>Account Number:</strong> 7030608002<br>
+  <strong>Name:</strong> Wisdom Tochukwu Nwabugwu<br>
+  <strong>Payment Method:</strong> Will use the one selected above
+</div>
 
 <button onclick="paymentMade()">I Have Made Payment</button>
 
@@ -112,8 +119,8 @@ function paymentMade(){
     return;
   }
   const paymentMethod = document.getElementById("payment").value;
-  // Redirect to WhatsApp
-  const message = `Hello, I have made payment for my order via ${paymentMethod}.\n\nAccount: 7030608002 (${paymentMethod})\nName: Wisdom Tochukwu Nwabugwu\nTotal: ₦${document.getElementById("total").innerText}`;
+  const total = document.getElementById("total").innerText;
+  const message = `Hello, I have made payment for my order via ${paymentMethod}.\n\nAccount: 7030608002 (${paymentMethod})\nName: Wisdom Tochukwu Nwabugwu\nTotal: ₦${total}`;
   const url = "https://wa.me/2349157054608?text=" + encodeURIComponent(message);
   window.location.href = url;
 }
