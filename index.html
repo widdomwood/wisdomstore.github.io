@@ -1,208 +1,112 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Wisdom Digital Store</title>
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Wisdom Store</title>
   <style>
-    body { margin:0; font-family: Arial; background:#f5f5f5; }
-    header { background:orange; padding:15px; color:white; text-align:center; font-size:22px; font-weight:bold; position:relative; }
-    .cart-counter { position:absolute; right:20px; top:15px; background:green; color:white; padding:5px 10px; border-radius:50%; font-weight:bold; }
-    .container { padding:15px; }
-    .promo { background:yellow; padding:10px; text-align:center; font-weight:bold; margin-bottom:10px; }
-    .products { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:15px; }
-    .product { background:white; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); text-align:center; position:relative; }
-    .product img { width:64px; height:40px; margin-bottom:8px; }
-    .product h3 { margin:5px 0; }
-    .price { color:green; font-weight:bold; margin:8px 0; }
-    button { background:orange; color:white; padding:8px; border:none; border-radius:5px; cursor:pointer; width:100%; margin-top:5px; }
-    button:hover { background:darkorange; }
-    .checkout { background:white; margin-top:20px; padding:15px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
-    .whatsapp-btn { background:green; margin-top:10px; }
-    .whatsapp-btn:hover { background:darkgreen; }
-    .reviews, .how-it-works { background:white; padding:10px; margin-top:20px; border-radius:8px; box-shadow:0 0 8px rgba(0,0,0,0.1); }
-    .reviews p, .how-it-works p { margin:5px 0; font-style:italic; }
-    footer { background:#333; color:white; padding:10px; text-align:center; margin-top:20px; font-size:14px; }
+    body { font-family: Arial, sans-serif; padding: 20px; background: #f8f8f8; }
+    h1, h2, h3 { color: #333; }
+    .product { border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #fff; border-radius: 8px; }
+    button { padding: 10px 15px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
+    button:hover { background: #218838; }
   </style>
 </head>
 <body>
 
-<header>
-  Wisdom Digital Store
-  <div class="cart-counter" id="cartCount">0</div>
-</header>
+  <h1>Wisdom Store</h1>
+  <h2>Available Numbers</h2>
 
-<div class="container">
-
-<div class="promo">🔥 PROMO: Limited offer on USA & UK Numbers! Use code <strong>WISDOM10</strong> for ₦500 off!</div>
-
-<div class="products">
-
+  <!-- Existing Products -->
   <div class="product">
-    <img src="https://flagcdn.com/us.svg" alt="USA Flag">
-    <h3>🇺🇸 USA Number</h3>
-    <div class="price">₦5,000</div>
-    <button onclick="addToCart(5000, 'USA Number', 10)">Add to Cart</button>
+    <h3>USA Number</h3>
+    <p>Price: ₦5,000</p>
+    <button onclick="order('USA')">Order Now</button>
   </div>
 
   <div class="product">
-    <img src="https://flagcdn.com/gb.svg" alt="UK Flag">
-    <h3>🇬🇧 UK Number</h3>
-    <div class="price">₦5,000</div>
-    <button onclick="addToCart(5000, 'UK Number', 10)">Add to Cart</button>
+    <h3>UK Number</h3>
+    <p>Price: ₦5,000</p>
+    <button onclick="order('UK')">Order Now</button>
   </div>
 
   <div class="product">
-    <img src="https://flagcdn.com/ph.svg" alt="Philippines Flag">
-    <h3>🇵🇭 Philippines</h3>
-    <div class="price">₦4,000</div>
-    <button onclick="addToCart(4000, 'Philippines Number', 5)">Add to Cart</button>
+    <h3>Philippines Number</h3>
+    <p>Price: ₦4,000</p>
+    <button onclick="order('Philippines')">Order Now</button>
   </div>
 
   <div class="product">
-    <img src="https://flagcdn.com/id.svg" alt="Indonesia Flag">
-    <h3>🇮🇩 Indonesia</h3>
-    <div class="price">₦4,000</div>
-    <button onclick="addToCart(4000, 'Indonesia Number', 5)">Add to Cart</button>
+    <h3>Indonesia Number</h3>
+    <p>Price: ₦4,000</p>
+    <button onclick="order('Indonesia')">Order Now</button>
   </div>
 
   <div class="product">
-    <img src="https://flagcdn.com/sa.svg" alt="Saudi Flag">
-    <h3>🇸🇦 Saudi Arabia</h3>
-    <div class="price">₦10,000</div>
-    <button onclick="addToCart(10000, 'Saudi Number', 3)">Add to Cart</button>
+    <h3>Saudi Arabia Number</h3>
+    <p>Price: ₦10,000</p>
+    <button onclick="order('Saudi Arabia')">Order Now</button>
   </div>
 
   <div class="product">
-    <img src="https://cdn-icons-png.flaticon.com/512/149/149059.png" alt="Other">
-    <h3>🌍 Other Countries</h3>
-    <div class="price">₦7,000</div>
-    <button onclick="addToCart(7000, 'Other Country Number', 7)">Add to Cart</button>
+    <h3>Other Countries</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('Other')">Order Now</button>
   </div>
 
-</div>
+  <!-- New Country Numbers -->
+  <div class="product">
+    <h3>South Africa Number</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('South Africa')">Order Now</button>
+  </div>
 
-<div class="checkout">
-  <h2>Checkout</h2>
-  <p><strong>Items:</strong></p>
-  <ul id="cartList"></ul>
-  <p><strong>Total: ₦<span id="total">0</span></strong></p>
+  <div class="product">
+    <h3>Kenya Number</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('Kenya')">Order Now</button>
+  </div>
 
-  <p><strong>Payment Method:</strong> Opay</p>
-  <p><strong>Account Name:</strong> Wisdom Tochukwu Nwabugwu</p>
-  <p><strong>Account Number:</strong> 7030608002</p>
+  <div class="product">
+    <h3>Nigeria Number</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('Nigeria')">Order Now</button>
+  </div>
 
-  <a href="https://wa.me/2349157054608?text=Hello%20I%20have%20made%20payment.%20Here%20is%20my%20proof." target="_blank">
-    <button class="whatsapp-btn">Send Proof on WhatsApp</button>
+  <div class="product">
+    <h3>Cameroon Number</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('Cameroon')">Order Now</button>
+  </div>
+
+  <div class="product">
+    <h3>Ghana Number</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('Ghana')">Order Now</button>
+  </div>
+
+  <div class="product">
+    <h3>Egypt Number</h3>
+    <p>Price: ₦7,000</p>
+    <button onclick="order('Egypt')">Order Now</button>
+  </div>
+
+  <h2>Payment Info</h2>
+  <p>Account Name: Wisdom Tochukwu Nwabugwu</p>
+  <p>Opay/Bank Number: 7030608002</p>
+  <p>After payment, send proof via WhatsApp:</p>
+  <a href="https://wa.me/2349157054608" target="_blank">
+    <button>Send Proof via WhatsApp</button>
   </a>
 
-  <p id="orderID" style="margin-top:10px; font-weight:bold;"></p>
-</div>
-
-<div class="reviews">
-  <h3>Customer Reviews ⭐⭐⭐⭐⭐</h3>
-  <p>“Fast delivery and legit numbers!” – Daniel</p>
-  <p>“Trusted seller. Highly recommend.” – Mary</p>
-  <p>“Smooth transaction, will buy again.” – John</p>
-</div>
-
-<div class="how-it-works">
-  <h3>How It Works</h3>
-  <p>1️⃣ Add your desired number(s) to the cart</p>
-  <p>2️⃣ Make payment to Opay account listed above</p>
-  <p>3️⃣ Send proof of payment via WhatsApp</p>
-  <p>4️⃣ Receive your number and order confirmation</p>
-</div>
-
-<footer>
-  Contact us: <a href="https://wa.me/2349157054608" style="color:white;">WhatsApp</a> | Email: wisdom@example.com
-  <br>© 2026 Wisdom Store
-</footer>
-
-<script>
-let total = 0;
-let cart = [];
-let stock = [10,10,5,5,3,7]; // stock for each product
-
-function addToCart(price, name, index) {
-  if(stock[index] <= 0) {
-    alert(name + " is out of stock!");
-    return;
-  }
-  total += price;
-  cart.push({name:name, price:price, index:index});
-  stock[index]--;
-
-  updateCart();
-}
-
-function removeFromCart(i) {
-  let item = cart[i];
-  total -= item.price;
-  stock[item.index]++;
-  cart.splice(i,1);
-  updateCart();
-}
-
-function updateCart() {
-  document.getElementById('cartCount').innerText = cart.length;
-  document.getElementById("total").innerText = total;
-
-  let cartList = document.getElementById("cartList");
-  cartList.innerHTML = '';
-  cart.forEach((item,i) => {
-    let li = document.createElement("li");
-    li.textContent = item.name + " ";
-    let removeBtn = document.createElement("button");
-    removeBtn.textContent = "Remove";
-    removeBtn.style.background = "red";
-    removeBtn.style.color = "white";
-    removeBtn.style.padding = "2px 5px";
-    removeBtn.style.marginLeft = "5px";
-    removeBtn.onclick = function() { removeFromCart(i); }
-    li.appendChild(removeBtn);
-    cartList.appendChild(li);
-  });
-
-  let orderID = 'WD-' + Math.floor(Math.random()*100000);
-  document.getElementById("orderID").innerText = "Your Order ID: " + orderID;
-}
-</script>
+  <script>
+    function order(country) {
+      alert(`You selected ${country}. Please make payment and send proof via WhatsApp.`);
+      // Optionally, you can link to WhatsApp automatically:
+      // window.open('https://wa.me/2349157054608?text=I want a ' + country + ' number', '_blank');
+    }
+  </script>
 
 </body>
 </html>
-<!-- New Country Numbers -->
-<div class="product">
-  <h3>South Africa Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="order('South Africa')">Order Now</button>
-</div>
-
-<div class="product">
-  <h3>Kenya Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="order('Kenya')">Order Now</button>
-</div>
-
-<div class="product">
-  <h3>Nigeria Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="order('Nigeria')">Order Now</button>
-</div>
-
-<div class="product">
-  <h3>Cameroon Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="order('Cameroon')">Order Now</button>
-</div>
-
-<div class="product">
-  <h3>Ghana Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="order('Ghana')">Order Now</button>
-</div>
-
-<div class="product">
-  <h3>Egypt Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="order('Egypt')">Order Now</button>
-</div>
+      
