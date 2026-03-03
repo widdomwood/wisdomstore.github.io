@@ -1,47 +1,146 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Wisdom Online Store</title>
+  <title>Wisdom Digital Store</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body { font-family: Arial; margin: 0; padding: 20px; background: #f4f4f4; }
-    h1 { text-align: center; color: #333; }
-    .product { background: white; padding: 15px; margin: 15px 0; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-    button { background: green; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
-    button:hover { background: darkgreen; }
-    .checkout { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background: orange;
+      padding: 15px;
+      color: white;
+      text-align: center;
+      font-size: 22px;
+      font-weight: bold;
+    }
+
+    .container {
+      padding: 15px;
+    }
+
+    .products {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .product {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    .product h3 {
+      margin: 5px 0;
+    }
+
+    .price {
+      color: green;
+      font-weight: bold;
+      margin: 8px 0;
+    }
+
+    button {
+      background: orange;
+      color: white;
+      padding: 8px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+
+    button:hover {
+      background: darkorange;
+    }
+
+    .checkout {
+      background: white;
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 8px;
+      box-shadow: 0 0 8px rgba(0,0,0,0.1);
+    }
+
+    .whatsapp-btn {
+      background: green;
+      margin-top: 10px;
+    }
+
+    .whatsapp-btn:hover {
+      background: darkgreen;
+    }
   </style>
 </head>
 <body>
 
-<h1>Welcome to Wisdom Store</h1>
+<header>Wisdom Digital Store</header>
 
-<div class="product">
-  <h2>USA Phone Number</h2>
-  <p>Valid USA number for apps and WhatsApp.</p>
-  <p><strong>Price: ₦5000</strong></p>
-  <button onclick="addToCart(5000, 'USA Phone Number')">Add to Cart</button>
-</div>
+<div class="container">
 
-<div class="product">
-  <h2>Saudi Phone Number</h2>
-  <p>Valid Saudi number for apps and WhatsApp.</p>
-  <p><strong>Price: ₦10000</strong></p>
-  <button onclick="addToCart(10000, 'Saudi Phone Number')">Add to Cart</button>
+<div class="products">
+
+  <div class="product">
+    <h3>🇺🇸 USA Number</h3>
+    <div class="price">₦5,000</div>
+    <button onclick="addToCart(5000, 'USA Number')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>🇬🇧 UK Number</h3>
+    <div class="price">₦5,000</div>
+    <button onclick="addToCart(5000, 'UK Number')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>🇵🇭 Philippines</h3>
+    <div class="price">₦4,000</div>
+    <button onclick="addToCart(4000, 'Philippines Number')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>🇮🇩 Indonesia</h3>
+    <div class="price">₦4,000</div>
+    <button onclick="addToCart(4000, 'Indonesia Number')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>🇸🇦 Saudi Arabia</h3>
+    <div class="price">₦10,000</div>
+    <button onclick="addToCart(10000, 'Saudi Number')">Add to Cart</button>
+  </div>
+
+  <div class="product">
+    <h3>🌍 Other Countries</h3>
+    <div class="price">₦7,000</div>
+    <button onclick="addToCart(7000, 'Other Country Number')">Add to Cart</button>
+  </div>
+
 </div>
 
 <div class="checkout">
   <h2>Checkout</h2>
-  <p>Items in Cart:</p>
+  <p><strong>Items:</strong></p>
   <ul id="cartList"></ul>
-  <p>Total: ₦<span id="total">0</span></p>
-  <p>Please transfer the amount to:</p>
-  <ul>
-    <li><strong>Payment Method:</strong> Opay</li>
-    <li><strong>Account Name:</strong> Wisdom Tochukwu Nwabugwu</li>
-    <li><strong>Account Number:</strong> 7030608002</li>
-  </ul>
-  <p>After transfer, send proof of payment to our WhatsApp/email.</p>
+
+  <p><strong>Total: ₦<span id="total">0</span></strong></p>
+
+  <p><strong>Payment Method:</strong> Opay</p>
+  <p><strong>Account Name:</strong> Wisdom Tochukwu Nwabugwu</p>
+  <p><strong>Account Number:</strong> 7030608002</p>
+
+  <a href="https://wa.me/2349157054608?text=Hello%20I%20have%20made%20payment.%20Here%20is%20my%20proof." target="_blank">
+    <button class="whatsapp-btn">Send Proof on WhatsApp</button>
+  </a>
+</div>
+
 </div>
 
 <script>
@@ -52,10 +151,8 @@
     total += price;
     cart.push(name);
 
-    // Update total
     document.getElementById("total").innerText = total;
 
-    // Update cart list
     let cartList = document.getElementById("cartList");
     cartList.innerHTML = '';
     cart.forEach(item => {
