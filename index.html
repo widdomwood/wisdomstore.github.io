@@ -3,39 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Wisdom Store</title>
+<title>Numberhub</title>
 <style>
 body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; }
-header { background:#fdbf00; padding:20px; text-align:center; color:#fff; font-size:24px; font-weight:bold; text-shadow:1px 1px #000; }
+header { background:#fdbf00; padding:20px; text-align:center; color:#fff; font-size:26px; font-weight:bold; text-shadow:1px 1px #000; }
 .container { max-width:1200px; margin:auto; padding:20px; }
 .hidden { display:none; }
-.products { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:20px; }
-.product { background:white; padding:10px; border-radius:8px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.15); transition:transform 0.2s; }
-.product:hover { transform:translateY(-5px); }
-.product img { width:80px; height:50px; margin-bottom:10px; }
-.product h3 { margin:5px 0; font-size:16px; }
-.product p { font-size:14px; color:#333; }
-.product input { width:50px; margin-top:5px; }
-.product button { background:#fdbf00; border:none; color:#fff; padding:8px 12px; margin-top:5px; cursor:pointer; border-radius:5px; font-weight:bold; }
+
+/* Search & Filter */
+#searchFilter { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
+#searchFilter input, #searchFilter select { padding:8px; flex:1; min-width:150px; border-radius:5px; border:1px solid #ccc; }
+
+/* Products Grid */
+.products { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; }
+.product { background:white; padding:15px; border-radius:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.2); transition:transform 0.3s, box-shadow 0.3s; }
+.product:hover { transform:translateY(-5px); box-shadow:0 4px 15px rgba(0,0,0,0.3); }
+.product img { width:100px; height:60px; margin-bottom:10px; }
+.product h3 { margin:5px 0; font-size:18px; }
+.product p { font-size:16px; color:#333; font-weight:bold; margin-bottom:10px; }
+.product input { width:60px; padding:5px; margin-bottom:5px; border-radius:5px; border:1px solid #ccc; }
+.product button { background:#fdbf00; border:none; color:#fff; padding:8px 12px; cursor:pointer; border-radius:5px; font-weight:bold; }
 .product button:hover { background:#ffa500; }
-.cart-section { margin-top:30px; background:white; padding:15px; border-radius:8px; box-shadow:0 2px 6px rgba(0,0,0,0.15); }
+
+/* Cart */
+.cart-section { margin-top:30px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
 .cart-section h2 { margin-top:0; }
 .cart-item { display:flex; justify-content:space-between; margin:5px 0; }
 .cart-item button { background:red; padding:3px 8px; border:none; color:white; border-radius:5px; cursor:pointer; }
+
+/* Payment Info */
 .payment-info { background:#fff3cd; padding:10px; border:1px solid #ffeeba; border-radius:5px; margin-top:15px; }
 #checkoutBtn { background:#fdbf00; border:none; color:#fff; padding:10px 15px; margin-top:10px; cursor:pointer; font-weight:bold; border-radius:5px; }
 #checkoutBtn:hover { background:#ffa500; }
+
+/* Forms */
 .form-section { margin-bottom:20px; }
-input, select { padding:5px; margin:5px 0; width:100%; }
+input, select { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
 button { cursor:pointer; }
+
+/* Admin Table */
 table { width:100%; border-collapse:collapse; margin-top:20px; }
 th, td { border:1px solid #ccc; padding:10px; text-align:left; }
 th { background:#fdbf00; color:#fff; }
+
+@media(max-width:600px){
+.products { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
+.product img { width:80px; height:50px; }
+}
 </style>
 </head>
 <body>
 
-<header>Wisdom Store - International Numbers</header>
+<header>Numberhub - International Numbers</header>
 <div class="container">
 
 <!-- Registration/Login Section -->
@@ -68,11 +87,23 @@ th { background:#fdbf00; color:#fff; }
 </div>
 </div>
 
-<!-- Store Section -->
+<!-- Search & Filter -->
 <div id="storeSection" class="hidden">
 <h2>Welcome, <span id="userEmailDisplay"></span> <button onclick="logout()">Logout</button></h2>
+
+<div id="searchFilter">
+<input type="text" id="searchInput" placeholder="Search by country" onkeyup="filterProducts()">
+<select id="priceFilter" onchange="filterProducts()">
+<option value="all">All Prices</option>
+<option value="0-4000">₦0 - ₦4000</option>
+<option value="4000-5000">₦4000 - ₦5000</option>
+<option value="5000-10000">₦5000+</option>
+</select>
+</div>
+
 <div class="products" id="products"></div>
 
+<!-- Cart Section -->
 <div class="cart-section">
 <h2>Cart</h2>
 <div id="cart"></div>
@@ -102,20 +133,17 @@ th { background:#fdbf00; color:#fff; }
 
 <!-- Admin Panel -->
 <div id="adminSection" class="hidden">
-<h2>Admin View - Users & Purchases</h2>
+<h2>Admin Panel</h2>
 <table id="usersTable">
 <tr>
-<th>Email</th>
-<th>Cart Items</th>
-<th>Total</th>
-<th>Payer Name</th>
-<th>Payer Phone</th>
-<th>Receipt File</th>
-<th>Action</th>
+<th>Email</th><th>Cart Items</th><th>Total</th><th>Payer Name</th><th>Payer Phone</th><th>Receipt File</th><th>Action</th>
 </tr>
 </table>
-</div>
 
+<h3>Edit Product Prices</h3>
+<table id="productsAdminTable">
+<tr><th>Country</th><th>Current Price</th><th>New Price</th><th>Update</th></tr>
+</table>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
@@ -130,13 +158,39 @@ let currentUser = localStorage.getItem("currentUser")||"";
 let adminPassword = "admin123"; 
 let isAdmin=false;
 
+// 65 country products sample (can add all)
+let products = [
+{country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"},
+{country:"Kenya", price:5000, flag:"https://flagcdn.com/ke.svg"},
+{country:"Ghana", price:5000, flag:"https://flagcdn.com/gh.svg"},
+{country:"Uganda", price:5000, flag:"https://flagcdn.com/ug.svg"},
+{country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
+{country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
+{country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
+{country:"USA", price:5000, flag:"https://flagcdn.com/us.svg"},
+{country:"Canada", price:5000, flag:"https://flagcdn.com/ca.svg"},
+{country:"India", price:4000, flag:"https://flagcdn.com/in.svg"},
+{country:"Pakistan", price:4000, flag:"https://flagcdn.com/pk.svg"},
+{country:"Philippines", price:4000, flag:"https://flagcdn.com/ph.svg"},
+{country:"Indonesia", price:4000, flag:"https://flagcdn.com/id.svg"},
+{country:"Germany", price:5000, flag:"https://flagcdn.com/de.svg"},
+{country:"Italy", price:5000, flag:"https://flagcdn.com/it.svg"},
+{country:"France", price:5000, flag:"https://flagcdn.com/fr.svg"},
+{country:"Mexico", price:5000, flag:"https://flagcdn.com/mx.svg"},
+{country:"Peru", price:5000, flag:"https://flagcdn.com/pe.svg"},
+{country:"Russia", price:5000, flag:"https://flagcdn.com/ru.svg"},
+{country:"Australia", price:5000, flag:"https://flagcdn.com/au.svg"},
+{country:"Greece", price:5000, flag:"https://flagcdn.com/gr.svg"},
+// Add remaining countries here...
+];
+
 function showStore(){
 document.getElementById("authSection").classList.add("hidden");
 document.getElementById("storeSection").classList.remove("hidden");
 document.getElementById("userEmailDisplay").innerText = currentUser;
 renderProducts();
 renderCart();
-if(isAdmin){document.getElementById("adminSection").classList.remove("hidden"); renderAdmin();}
+if(isAdmin){document.getElementById("adminSection").classList.remove("hidden"); renderAdmin(); renderAdminProducts();}
 }
 
 function showRegister(){document.getElementById("registerDiv").classList.remove("hidden");document.getElementById("loginDiv").classList.add("hidden");document.getElementById("forgotDiv").classList.add("hidden");}
@@ -203,27 +257,11 @@ showLogin();
 }else{alert("Invalid code");}
 }
 
-// ----------- Store Products -----------
-const products = [
-{country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"},
-{country:"Kenya", price:5000, flag:"https://flagcdn.com/ke.svg"},
-{country:"Ghana", price:5000, flag:"https://flagcdn.com/gh.svg"},
-{country:"Uganda", price:5000, flag:"https://flagcdn.com/ug.svg"},
-{country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
-{country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
-{country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
-{country:"USA", price:5000, flag:"https://flagcdn.com/us.svg"},
-{country:"Canada", price:5000, flag:"https://flagcdn.com/ca.svg"},
-{country:"India", price:4000, flag:"https://flagcdn.com/in.svg"},
-{country:"Pakistan", price:4000, flag:"https://flagcdn.com/pk.svg"},
-{country:"Philippines", price:4000, flag:"https://flagcdn.com/ph.svg"},
-{country:"Indonesia", price:4000, flag:"https://flagcdn.com/id.svg"}
-];
-
-function renderProducts(){
+// ----------- Render Products & Cart -----------
+function renderProducts(filteredProducts){
 const productsDiv=document.getElementById("products");
 productsDiv.innerHTML="";
-products.forEach((p,index)=>{
+(filteredProducts||products).forEach((p,index)=>{
 productsDiv.innerHTML+=`
 <div class="product">
 <img src="${p.flag}" alt="${p.country} flag">
@@ -267,6 +305,8 @@ cartDiv.innerHTML+=`<div class="cart-item"><span>${c.country} x ${c.qty} = ₦${
 document.getElementById("total").innerText=total;
 }
 
+// ----------- Payment -----------
+
 function paymentMade(){
 let userCart=cartsPerUser[currentUser]||[];
 if(userCart.length===0){alert("Cart empty"); return;}
@@ -283,7 +323,8 @@ const url="https://wa.me/2349157054608?text="+encodeURIComponent(message);
 window.location.href=url;
 }
 
-// ----------- Admin Rendering -----------
+// ----------- Admin Panel -----------
+
 function renderAdmin(){
 let table=document.getElementById("usersTable");
 table.innerHTML=`<tr>
@@ -301,14 +342,4 @@ row.insertCell(4).innerText=info.phone||"";
 row.insertCell(5).innerText=info.receipt||"";
 let delBtn=document.createElement("button");
 delBtn.innerText="Remove";
-delBtn.onclick=function(){if(confirm("Delete this user?")){delete accounts[email];delete cartsPerUser[email];delete paymentInfo[email];localStorage.setItem("accounts",JSON.stringify(accounts));localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));localStorage.setItem("paymentInfo",JSON.stringify(paymentInfo));renderAdmin();}};
-row.insertCell(6).appendChild(delBtn);
-}
-
-}
-
-if(currentUser){showStore();}
-</script>
-
-</body>
-                                                                               </html>
+delBtn.onclick=function(){if(confirm("Delete this user?")){delete accounts[email];delete cartsPerUser[email];delete paymentInfo[email];localStorage.setItem("accounts",JSON
