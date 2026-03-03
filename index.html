@@ -5,129 +5,124 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Wisdom Store</title>
 <style>
-body { font-family: Arial, sans-serif; padding: 20px; background: #f8f8f8; }
-h1, h2, h3 { color: #333; }
-.product { border: 1px solid #ddd; padding: 15px; margin: 10px 0; background: #fff; border-radius: 8px; }
-button { padding: 10px 15px; background: #28a745; color: #fff; border: none; border-radius: 5px; cursor: pointer; }
-button:hover { background: #218838; }
-#cart { border: 1px solid #333; padding: 15px; margin: 20px 0; background: #fff; border-radius: 8px; }
+/* General Styles */
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; background: #f5f5f5; }
+header { background: #ff9800; color: white; padding: 15px 20px; text-align: center; font-size: 24px; font-weight: bold; }
+.container { display: flex; flex-wrap: wrap; justify-content: center; padding: 20px; gap: 20px; }
+.product-card { background: #fff; border-radius: 8px; width: 200px; padding: 15px; box-shadow: 0 2px 6px rgba(0,0,0,0.2); text-align: center; }
+.product-card img { width: 100px; height: 60px; object-fit: cover; margin-bottom: 10px; }
+.product-card h3 { margin: 10px 0 5px 0; font-size: 18px; }
+.product-card p { margin: 5px 0; font-weight: bold; color: #333; }
+button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; }
+.add-btn { background: #28a745; color: white; margin: 5px; }
+.remove-btn { background: #dc3545; color: white; margin: 5px; }
+.add-btn:hover { background: #218838; }
+.remove-btn:hover { background: #c82333; }
+
+/* Cart Sidebar */
+#cart-sidebar { position: fixed; right: 0; top: 0; width: 300px; height: 100%; background: #fff; box-shadow: -2px 0 6px rgba(0,0,0,0.3); padding: 20px; transform: translateX(100%); transition: transform 0.3s ease; z-index: 1000; overflow-y: auto; }
+#cart-sidebar.active { transform: translateX(0); }
+#cart-sidebar h2 { text-align: center; margin-bottom: 20px; }
+#cart-items { list-style: none; padding: 0; margin: 0; }
+#cart-items li { display: flex; justify-content: space-between; margin-bottom: 10px; }
+#cart-total { font-weight: bold; margin-top: 15px; text-align: center; }
+#checkout-btn { width: 100%; background: #ff9800; color: white; padding: 10px; border-radius: 5px; margin-top: 10px; cursor: pointer; }
+#checkout-btn:hover { background: #e68900; }
+#cart-toggle { position: fixed; right: 20px; top: 20px; background: #ff9800; color: white; padding: 10px 15px; border-radius: 5px; cursor: pointer; z-index: 1100; }
+#cart-toggle:hover { background: #e68900; }
 </style>
 </head>
 <body>
 
-<h1>Wisdom Store</h1>
-<h2>Available Numbers</h2>
+<header>Wisdom Store</header>
+<div id="cart-toggle">🛒 Cart (<span id="cart-count">0</span>)</div>
 
-<div class="product" data-name="USA Number" data-price="5000">
-  <h3>USA Number</h3>
-  <p>Price: ₦5,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
+<div class="container" id="products-container">
+  <!-- Products will be injected here by JavaScript -->
 </div>
 
-<div class="product" data-name="UK Number" data-price="5000">
-  <h3>UK Number</h3>
-  <p>Price: ₦5,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
+<!-- Cart Sidebar -->
+<div id="cart-sidebar">
+  <h2>Your Cart</h2>
+  <ul id="cart-items"></ul>
+  <p id="cart-total">Total: ₦0</p>
+  <button id="checkout-btn">Checkout via WhatsApp</button>
 </div>
-
-<div class="product" data-name="Philippines Number" data-price="4000">
-  <h3>Philippines Number</h3>
-  <p>Price: ₦4,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Indonesia Number" data-price="4000">
-  <h3>Indonesia Number</h3>
-  <p>Price: ₦4,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Saudi Arabia Number" data-price="10000">
-  <h3>Saudi Arabia Number</h3>
-  <p>Price: ₦10,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="South Africa Number" data-price="7000">
-  <h3>South Africa Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Kenya Number" data-price="7000">
-  <h3>Kenya Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Nigeria Number" data-price="7000">
-  <h3>Nigeria Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Cameroon Number" data-price="7000">
-  <h3>Cameroon Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Ghana Number" data-price="7000">
-  <h3>Ghana Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<div class="product" data-name="Egypt Number" data-price="7000">
-  <h3>Egypt Number</h3>
-  <p>Price: ₦7,000</p>
-  <button onclick="addToCart(this)">Add to Cart</button>
-</div>
-
-<h2>Cart</h2>
-<div id="cart">
-  <p>No items yet.</p>
-</div>
-<button onclick="checkout()">Send Order via WhatsApp</button>
 
 <script>
+// Product Data
+const products = [
+  { name: "USA Number", price: 5000, flag: "https://flagcdn.com/w80/us.png" },
+  { name: "UK Number", price: 5000, flag: "https://flagcdn.com/w80/gb.png" },
+  { name: "Philippines Number", price: 4000, flag: "https://flagcdn.com/w80/ph.png" },
+  { name: "Indonesia Number", price: 4000, flag: "https://flagcdn.com/w80/id.png" },
+  { name: "Saudi Arabia Number", price: 10000, flag: "https://flagcdn.com/w80/sa.png" },
+  { name: "South Africa Number", price: 7000, flag: "https://flagcdn.com/w80/za.png" },
+  { name: "Kenya Number", price: 7000, flag: "https://flagcdn.com/w80/ke.png" },
+  { name: "Nigeria Number", price: 7000, flag: "https://flagcdn.com/w80/ng.png" },
+  { name: "Cameroon Number", price: 7000, flag: "https://flagcdn.com/w80/cm.png" },
+  { name: "Ghana Number", price: 7000, flag: "https://flagcdn.com/w80/gh.png" },
+  { name: "Egypt Number", price: 7000, flag: "https://flagcdn.com/w80/eg.png" },
+];
+
+// Render Products
+const productsContainer = document.getElementById('products-container');
+products.forEach((product, index) => {
+  const card = document.createElement('div');
+  card.className = 'product-card';
+  card.innerHTML = `
+    <img src="${product.flag}" alt="${product.name} Flag">
+    <h3>${product.name}</h3>
+    <p>₦${product.price.toLocaleString()}</p>
+    <button class="add-btn" onclick="addToCart(${index})">Add to Cart</button>
+  `;
+  productsContainer.appendChild(card);
+});
+
+// Cart Logic
 let cart = [];
 
-function addToCart(button) {
-  let productDiv = button.parentElement;
-  let name = productDiv.getAttribute('data-name');
-  let price = parseInt(productDiv.getAttribute('data-price'));
-  cart.push({name, price});
+const cartSidebar = document.getElementById('cart-sidebar');
+const cartToggle = document.getElementById('cart-toggle');
+const cartItemsEl = document.getElementById('cart-items');
+const cartCountEl = document.getElementById('cart-count');
+const cartTotalEl = document.getElementById('cart-total');
+
+cartToggle.addEventListener('click', () => cartSidebar.classList.toggle('active'));
+
+function addToCart(index) {
+  const product = products[index];
+  cart.push(product);
+  renderCart();
+}
+
+function removeFromCart(index) {
+  cart.splice(index, 1);
   renderCart();
 }
 
 function renderCart() {
-  let cartDiv = document.getElementById('cart');
-  if(cart.length === 0) {
-    cartDiv.innerHTML = '<p>No items yet.</p>';
-    return;
-  }
-  let html = '<ul>';
+  cartItemsEl.innerHTML = '';
   let total = 0;
-  cart.forEach(item => {
-    html += `<li>${item.name} - ₦${item.price.toLocaleString()}</li>`;
+  cart.forEach((item, i) => {
     total += item.price;
+    const li = document.createElement('li');
+    li.innerHTML = `${item.name} - ₦${item.price.toLocaleString()} <button class="remove-btn" onclick="removeFromCart(${i})">Remove</button>`;
+    cartItemsEl.appendChild(li);
   });
-  html += `</ul><p><strong>Total: ₦${total.toLocaleString()}</strong></p>`;
-  cartDiv.innerHTML = html;
+  cartTotalEl.textContent = `Total: ₦${total.toLocaleString()}`;
+  cartCountEl.textContent = cart.length;
 }
 
-function checkout() {
-  if(cart.length === 0) { alert('Cart is empty!'); return; }
-  let message = 'Hello, I want to order:\n';
+document.getElementById('checkout-btn').addEventListener('click', () => {
+  if(cart.length === 0){ alert("Your cart is empty!"); return; }
+  let message = "Hello, I want to order:\n";
   cart.forEach(item => {
     message += `${item.name} - ₦${item.price}\n`;
   });
-  let total = cart.reduce((sum, item) => sum + item.price, 0);
-  message += `Total: ₦${total}\n`;
-  let whatsappUrl = 'https://wa.me/2349157054608?text=' + encodeURIComponent(message);
-  window.open(whatsappUrl, '_blank');
-}
+  const whatsappUrl = "https://wa.me/2349157054608?text=" + encodeURIComponent(message);
+  window.open(whatsappUrl, "_blank");
+});
 </script>
 
 </body>
