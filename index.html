@@ -4,47 +4,12 @@
   <title>Wisdom Online Store</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: #f4f4f4;
-    }
-
-    h1 {
-      text-align: center;
-      color: #333;
-    }
-
-    .product {
-      background: white;
-      padding: 15px;
-      margin: 15px 0;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-
-    button {
-      background-color: green;
-      color: white;
-      padding: 10px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-      width: 100%;
-    }
-
-    button:hover {
-      background-color: darkgreen;
-    }
-
-    .checkout {
-      background: white;
-      padding: 15px;
-      margin-top: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
+    body { font-family: Arial; margin: 0; padding: 20px; background: #f4f4f4; }
+    h1 { text-align: center; color: #333; }
+    .product { background: white; padding: 15px; margin: 15px 0; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    button { background: green; color: white; padding: 10px; border: none; border-radius: 5px; cursor: pointer; width: 100%; }
+    button:hover { background: darkgreen; }
+    .checkout { background: white; padding: 15px; margin-top: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
   </style>
 </head>
 <body>
@@ -52,31 +17,54 @@
 <h1>Welcome to Wisdom Store</h1>
 
 <div class="product">
-  <h2>Smart Watch</h2>
-  <p>High quality smart watch with long battery life.</p>
+  <h2>USA Phone Number</h2>
+  <p>Valid USA number for apps and WhatsApp.</p>
   <p><strong>Price: ₦5000</strong></p>
-  <button onclick="addToCart()">Add to Cart</button>
+  <button onclick="addToCart(5000, 'USA Phone Number')">Add to Cart</button>
+</div>
+
+<div class="product">
+  <h2>Saudi Phone Number</h2>
+  <p>Valid Saudi number for apps and WhatsApp.</p>
+  <p><strong>Price: ₦10000</strong></p>
+  <button onclick="addToCart(10000, 'Saudi Phone Number')">Add to Cart</button>
 </div>
 
 <div class="checkout">
   <h2>Checkout</h2>
+  <p>Items in Cart:</p>
+  <ul id="cartList"></ul>
   <p>Total: ₦<span id="total">0</span></p>
-  <p>Please transfer to:</p>
+  <p>Please transfer the amount to:</p>
   <ul>
-    <li><strong>Bank:</strong> Your Bank Name</li>opay
-    <li><strong>Account Name:</strong> Wisdom N.</li>
+    <li><strong>Payment Method:</strong> Opay</li>
+    <li><strong>Account Name:</strong> Wisdom Tochukwu Nwabugwu</li>
     <li><strong>Account Number:</strong> 7030608002</li>
   </ul>
+  <p>After transfer, send proof of payment to our WhatsApp/email.</p>
 </div>
 
 <script>
   let total = 0;
+  let cart = [];
 
-  function addToCart() {
-    total += 5000;
+  function addToCart(price, name) {
+    total += price;
+    cart.push(name);
+
+    // Update total
     document.getElementById("total").innerText = total;
+
+    // Update cart list
+    let cartList = document.getElementById("cartList");
+    cartList.innerHTML = '';
+    cart.forEach(item => {
+      let li = document.createElement("li");
+      li.textContent = item;
+      cartList.appendChild(li);
+    });
   }
 </script>
 
 </body>
-                                             </html>
+</html>
