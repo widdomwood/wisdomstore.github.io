@@ -56,18 +56,58 @@ button { padding: 8px 12px; border: none; border-radius: 5px; cursor: pointer; }
   <p id="cart-total">Total: ₦0</p>
   <button id="checkout-btn">Checkout</button>
 </div>
+<script>
+let cart = [];
 
-<!-- Payment Modal -->
-<div id="payment-modal">
-  <div class="modal-content">
-    <h2>Payment Instructions</h2>
-    <p>Account Name: Wisdom Tochukwu Nwabugwu</p>
-    <p>Opay/Bank/Palmpay Number: 7030608002</p>
-    <p>Total Amount: <span id="modal-total">₦0</span></p>
-    <button id="confirm-payment-btn">I’ve Paid – Confirm</button>
-  </div>
-</div>
+function addToCart(name, price) {
+    cart.push({name, price});
+    updateCart();
+}
 
+function removeFromCart(index) {
+    cart.splice(index, 1);
+    updateCart();
+}
+
+function updateCart() {
+    const cartList = document.getElementById('cartItems');
+    cartList.innerHTML = '';
+    cart.forEach((item, i) => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - ₦${item.price}`;
+        const removeBtn = document.createElement('button');
+        removeBtn.textContent = 'Remove';
+        removeBtn.style.marginLeft = '10px';
+        removeBtn.onclick = () => removeFromCart(i);
+        li.appendChild(removeBtn);
+        cartList.appendChild(li);
+    });
+}
+
+function checkout() {
+    if(cart.length === 0) {
+        alert('Your cart is empty!');
+        return;
+    }
+    
+    let total = cart.reduce((sum, item) => sum + item.price, 0);
+    
+    // Payment selection
+    let paymentOption = prompt(
+        `Your total is ₦${total}\nChoose payment option:\n1. Opay\n2. Palmpay\nEnter 1 or 2`
+    );
+    
+    let account;
+    if(paymentOption === '1') account = 'Opay: 7030608002 - Wisdom Tochukwu Nwabugwu';
+    else if(paymentOption === '2') account = 'Palmpay: 7030608002 - Wisdom Tochukwu Nwabugwu';
+    else { alert('Invalid option'); return; }
+    
+    alert(`Send ₦${total} to ${account}\nAfter payment, send proof to WhatsApp: +234 915 705 4608`);
+    
+    cart = [];
+    updateCart();
+}
+</script>
 <script>
 // Product Data
 const products = [
