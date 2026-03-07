@@ -2,150 +2,192 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NumberHub Pro</title>
+<title>NumberHub Secure Marketplace</title>
 <style>
 body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#F5F7FB}
 header{background:#1E6BFF;color:white;padding:15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
 nav a{color:white;margin:0 10px;text-decoration:none;font-weight:bold}
 .container{padding:20px;max-width:1200px;margin:auto}
-.hero{background:white;padding:30px;border-radius:10px;margin-bottom:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:30px}
-.card{background:white;border-radius:10px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);text-align:center}
 button{background:#1E6BFF;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-top:10px}
 button:hover{background:#4A8CFF}
-.cart{position:fixed;right:20px;bottom:20px;background:#1E6BFF;color:white;padding:12px;border-radius:50px;cursor:pointer;z-index:1000}
+input{padding:8px;margin:5px 0;width:100%;border-radius:5px;border:1px solid #ccc}
+.card{background:white;border-radius:10px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);text-align:center;margin-bottom:15px}
 footer{background:#0E3EA8;color:white;text-align:center;padding:20px;margin-top:40px}
-input,select{padding:8px;margin:5px 0;width:100%;border-radius:5px;border:1px solid #ccc}
-.admin{background:white;padding:15px;border-radius:10px;margin-top:20px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-.search-bar{margin-bottom:15px}
-.featured{margin-bottom:30px}
+.hidden{display:none}
 </style>
 </head>
 <body>
 <header>
-<div><b>NumberHub Pro</b></div>
+<div><b>NumberHub</b></div>
 <nav>
-<a href="#">Home</a>
-<a href="#countries">Browse Numbers</a>
-<a href="#admin">Admin</a>
+<a href="#" id="homeLink">Home</a>
+<a href="#" id="numbersLink" class="hidden">Numbers</a>
+<a href="#" id="dashboardLink" class="hidden">Dashboard</a>
+<a href="#" id="logoutLink" class="hidden" onclick="logout()">Logout</a>
 </nav>
-</header><div class="container">
-<div class="hero">
-<h1>Buy International Phone Numbers Instantly</h1>
-<p>Choose a country, select a number, and receive it quickly.</p>
-</div><div class="search-bar">
-<input type="text" id="searchCountry" placeholder="Search country..." oninput="filterCountries()">
-</div><h3>Featured Numbers</h3>
-<div class="cards" id="featuredNumbers"></div><h3 id="countries">Available Countries</h3>
-<div class="cards" id="countryList"></div><h3>Numbers</h3>
-<div class="cards" id="numberList"></div><div class="admin" id="admin">
-<h3>Admin Panel</h3>
-<input id="country" placeholder="Country Name">
-<input id="number" placeholder="Phone Number">
-<input id="price" placeholder="Price">
-<button onclick="addNumber()">Add Number</button>
-<p><i>All numbers will appear in the list for users automatically. Change prices anytime.</i></p>
+</header>
+<div class="container" id="mainContainer">
+<!-- Login / Signup -->
+<div id="authContainer">
+<h2>Welcome to NumberHub</h2>
+<div id="signupForm">
+<h3>Sign Up</h3>
+<input type="text" id="signupUsername" placeholder="Username">
+<input type="password" id="signupPassword" placeholder="Password">
+<button onclick="signup()">Sign Up</button>
 </div>
-</div><div class="cart" onclick="viewCart()">Cart (<span id="cartCount">0</span>)</div><footer>
+<div id="loginForm">
+<h3>Login</h3>
+<input type="text" id="loginUsername" placeholder="Username">
+<input type="password" id="loginPassword" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+<div id="adminLoginForm" class="hidden">
+<h3>Admin Login</h3>
+<input type="text" id="adminUsername" placeholder="Admin Username">
+<input type="password" id="adminPassword" placeholder="Admin Password">
+<button onclick="adminLogin()">Admin Login</button>
+</div>
+</div><!-- Numbers Section --><div id="numbersContainer" class="hidden">
+<h2>Available Numbers</h2>
+<p>Numbers are visible only after payment is confirmed.</p>
+<div id="numbersList"></div>
+<button onclick="checkout()">Checkout via WhatsApp</button>
+</div><!-- Admin Dashboard --><div id="dashboardContainer" class="hidden">
+<h2>Admin Dashboard</h2>
+<h3>Orders</h3>
+<div id="ordersList"></div>
+<h3>Add Numbers (Optional)</h3>
+<input type="text" id="adminNumber" placeholder="Number">
+<input type="text" id="adminUser" placeholder="Assign to Username">
+<button onclick="addNumberAdmin()">Add Number</button>
+</div>
+</div>
+<footer>
 <p>NumberHub © 2026</p>
 <p>Contact Support on WhatsApp</p>
 </footer><script>
-let countries=["Nigeria","Kenya","Uganda","Ghana","India","Pakistan","Philippines","Indonesia","Mali","Burkina Faso","South Africa","Egypt","Morocco","Algeria","United States","Canada","Brazil","Argentina","Mexico","Chile","Colombia","Peru","United Kingdom","Germany","France","Italy","Spain","Netherlands","Sweden","Norway","Finland","Turkey","United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Thailand","Vietnam","Malaysia","Singapore","Japan","China","Australia","New Zealand","Russia","Ukraine","Poland","Romania","Greece"];
+// Simple localStorage-based user/auth system
+let users = JSON.parse(localStorage.getItem('users')||'{}');
+let admin = {username:'admin', password:'admin123'}; // you can change
+let currentUser = localStorage.getItem('currentUser')||'';
+let numbers = JSON.parse(localStorage.getItem('numbers')||'[]'); // {username, number, delivered:false}
+let orders = JSON.parse(localStorage.getItem('orders')||'[]'); // {username, numbers, ref}
 
-// Preloaded example numbers for all countries
-let numbers=JSON.parse(localStorage.getItem("numbers")||"[]");
-if(numbers.length===0){
-    countries.forEach(c=>{
-        for(let i=1;i<=3;i++){
-            numbers.push({country:c,number:`+${Math.floor(1000000000 + Math.random()*9000000000)}`,price:Math.floor(1000 + Math.random()*1000)});
-        }
+function signup(){
+    let u=document.getElementById('signupUsername').value.trim();
+    let p=document.getElementById('signupPassword').value.trim();
+    if(!u||!p){alert('Fill all fields'); return;}
+    if(users[u]){alert('Username exists'); return;}
+    users[u]={password:p};
+    localStorage.setItem('users', JSON.stringify(users));
+    alert('Signup successful. Please login.');
+}
+
+function login(){
+    let u=document.getElementById('loginUsername').value.trim();
+    let p=document.getElementById('loginPassword').value.trim();
+    if(users[u] && users[u].password===p){
+        currentUser=u;
+        localStorage.setItem('currentUser', currentUser);
+        showNumbersPage();
+    } else {alert('Invalid credentials');}
+}
+
+function adminLogin(){
+    let u=document.getElementById('adminUsername').value.trim();
+    let p=document.getElementById('adminPassword').value.trim();
+    if(u===admin.username && p===admin.password){
+        currentUser='admin';
+        showAdminDashboard();
+    } else {alert('Invalid admin credentials');}
+}
+
+function logout(){
+    currentUser='';
+    localStorage.removeItem('currentUser');
+    location.reload();
+}
+
+function showNumbersPage(){
+    document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('numbersContainer').classList.remove('hidden');
+    document.getElementById('numbersLink').classList.remove('hidden');
+    document.getElementById('logoutLink').classList.remove('hidden');
+    displayUserNumbers();
+}
+
+function showAdminDashboard(){
+    document.getElementById('authContainer').classList.add('hidden');
+    document.getElementById('dashboardContainer').classList.remove('hidden');
+    document.getElementById('dashboardLink').classList.remove('hidden');
+    document.getElementById('logoutLink').classList.remove('hidden');
+    displayOrders();
+}
+
+function addNumberAdmin(){
+    let n=document.getElementById('adminNumber').value.trim();
+    let u=document.getElementById('adminUser').value.trim();
+    if(!n||!u){alert('Fill all fields'); return;}
+    numbers.push({username:u, number:n, delivered:false});
+    localStorage.setItem('numbers', JSON.stringify(numbers));
+    alert('Number added');
+    displayOrders();
+}
+
+function displayUserNumbers(){
+    let list=document.getElementById('numbersList');
+    list.innerHTML='';
+    let userNumbers = numbers.filter(n=>n.username===currentUser && n.delivered);
+    if(userNumbers.length===0){
+        list.innerHTML='<p>No numbers available. Please checkout and confirm payment.</p>';
+        return;
+    }
+    userNumbers.forEach(n=>{
+        let div=document.createElement('div');
+        div.className='card';
+        div.innerHTML=`<b>${n.number}</b>`;
+        list.appendChild(div);
     });
-    localStorage.setItem("numbers",JSON.stringify(numbers));
 }
 
-let cart=[];
-let orderCounter=parseInt(localStorage.getItem("orderCounter")||"0");
-
-function loadCountries(){
-let list=document.getElementById("countryList");
-list.innerHTML="";
-countries.forEach(c=>{
-let div=document.createElement("div");
-div.className="card";
-div.innerHTML=`<h4>${c}</h4><button onclick="showNumbers('${c}')">View Numbers</button>`;
-list.appendChild(div);
-});
+function displayOrders(){
+    let list=document.getElementById('ordersList');
+    list.innerHTML='';
+    let grouped = {};
+    numbers.forEach(n=>{
+        if(!grouped[n.username]) grouped[n.username]=[];
+        grouped[n.username].push(n);
+    });
+    for(let u in grouped){
+        let div=document.createElement('div');
+        div.className='card';
+        let inner='';
+        grouped[u].forEach(num=>{
+            inner+=`${num.number} - Delivered: ${num.delivered} <button onclick="markDelivered('${num.username}','${num.number}')">Mark Delivered</button><br>`;
+        });
+        div.innerHTML=`<b>User: ${u}</b><br>${inner}`;
+        list.appendChild(div);
+    }
 }
 
-function filterCountries(){
-let query=document.getElementById("searchCountry").value.toLowerCase();
-let filtered=countries.filter(c=>c.toLowerCase().includes(query));
-let list=document.getElementById("countryList");
-list.innerHTML="";
-filtered.forEach(c=>{
-let div=document.createElement("div");
-div.className="card";
-div.innerHTML=`<h4>${c}</h4><button onclick="showNumbers('${c}')">View Numbers</button>`;
-list.appendChild(div);
-});
+function markDelivered(user, num){
+    numbers=numbers.map(n=>{if(n.username===user && n.number===num){n.delivered=true;} return n;});
+    localStorage.setItem('numbers', JSON.stringify(numbers));
+    displayOrders();
+    alert('Number marked as delivered');
 }
 
-function showNumbers(country){
-let list=document.getElementById("numberList");
-list.innerHTML="";
-numbers.filter(n=>n.country===country).forEach(n=>{
-let div=document.createElement("div");
-div.className="card";
-div.innerHTML=`<b>${n.number}</b><br>₦${n.price}<br><button onclick="addCart('${n.number}',${n.price})">Add to Cart</button>`;
-list.appendChild(div);
-});
-updateFeatured();
+function checkout(){
+    let ref='NX'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.floor(Math.random()*1000);
+    let msg=`Hello Admin, ${currentUser} wants to buy numbers (Ref: ${ref}).`;
+    window.open(`https://wa.me/2349157054608?text=${msg}`);
+    alert('Send payment proof to Admin via WhatsApp. Numbers will appear after confirmation.');
 }
 
-function updateFeatured(){
-let featured=document.getElementById("featuredNumbers");
-featured.innerHTML="";
-numbers.slice(0,6).forEach(n=>{
-let div=document.createElement("div");
-div.className="card";
-div.innerHTML=`<b>${n.number}</b><br>₦${n.price}<br><button onclick="addCart('${n.number}',${n.price})">Add to Cart</button>`;
-featured.appendChild(div);
-});
+// Show admin login link if no current user
+if(!currentUser){
+    document.getElementById('adminLoginForm').classList.remove('hidden');
 }
-
-function addNumber(){
-let c=document.getElementById("country").value.trim();
-let n=document.getElementById("number").value.trim();
-let p=document.getElementById("price").value.trim();
-if(c&&n&&p){
-numbers.push({country:c,number:n,price:p});
-localStorage.setItem("numbers",JSON.stringify(numbers));
-alert("Number added successfully");
-document.getElementById("country").value="";
-document.getElementById("number").value="";
-document.getElementById("price").value="";
-showNumbers(c);
-} else {alert("Please fill all fields")}
-}
-
-function addCart(num,price){
-cart.push({num,price});
-document.getElementById("cartCount").innerText=cart.length;
-}
-
-function viewCart(){
-if(cart.length===0){alert("Cart is empty");return;}
-orderCounter++;
-localStorage.setItem("orderCounter",orderCounter);
-let ref=`NX${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${orderCounter}`;
-let msg=`Hello Nexar Admin, I want to buy these numbers (Ref: ${ref}):%0A`;
-cart.forEach(i=>msg+=`${i.num} - ₦${i.price}%0A`);
-window.open(`https://wa.me/2349157054608?text=${msg}`);
-cart=[];
-document.getElementById("cartCount").innerText=0;
-}
-
-loadCountries();
-updateFeatured();
 </script></body>
-</html>
+    </html>
