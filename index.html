@@ -1,345 +1,151 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Numberhub</title>
+<title>NumberHub Pro</title>
 <style>
-body { font-family: Arial, sans-serif; margin:0; padding:0; background:#f5f5f5; }
-header { background:#fdbf00; padding:20px; text-align:center; color:#fff; font-size:26px; font-weight:bold; text-shadow:1px 1px #000; }
-.container { max-width:1200px; margin:auto; padding:20px; }
-.hidden { display:none; }
-
-/* Search & Filter */
-#searchFilter { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
-#searchFilter input, #searchFilter select { padding:8px; flex:1; min-width:150px; border-radius:5px; border:1px solid #ccc; }
-
-/* Products Grid */
-.products { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; }
-.product { background:white; padding:15px; border-radius:10px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,0.2); transition:transform 0.3s, box-shadow 0.3s; }
-.product:hover { transform:translateY(-5px); box-shadow:0 4px 15px rgba(0,0,0,0.3); }
-.product img { width:100px; height:60px; margin-bottom:10px; }
-.product h3 { margin:5px 0; font-size:18px; }
-.product p { font-size:16px; color:#333; font-weight:bold; margin-bottom:10px; }
-.product input { width:60px; padding:5px; margin-bottom:5px; border-radius:5px; border:1px solid #ccc; }
-.product button { background:#fdbf00; border:none; color:#fff; padding:8px 12px; cursor:pointer; border-radius:5px; font-weight:bold; }
-.product button:hover { background:#ffa500; }
-
-/* Cart */
-.cart-section { margin-top:30px; background:white; padding:15px; border-radius:10px; box-shadow:0 2px 8px rgba(0,0,0,0.2); }
-.cart-section h2 { margin-top:0; }
-.cart-item { display:flex; justify-content:space-between; margin:5px 0; }
-.cart-item button { background:red; padding:3px 8px; border:none; color:white; border-radius:5px; cursor:pointer; }
-
-/* Payment Info */
-.payment-info { background:#fff3cd; padding:10px; border:1px solid #ffeeba; border-radius:5px; margin-top:15px; }
-#checkoutBtn { background:#fdbf00; border:none; color:#fff; padding:10px 15px; margin-top:10px; cursor:pointer; font-weight:bold; border-radius:5px; }
-#checkoutBtn:hover { background:#ffa500; }
-
-/* Forms */
-.form-section { margin-bottom:20px; }
-input, select { padding:8px; margin:5px 0; width:100%; border-radius:5px; border:1px solid #ccc; }
-button { cursor:pointer; }
-
-/* Admin Table */
-table { width:100%; border-collapse:collapse; margin-top:20px; }
-th, td { border:1px solid #ccc; padding:10px; text-align:left; }
-th { background:#fdbf00; color:#fff; }
-
-@media(max-width:600px){
-.products { grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); }
-.product img { width:80px; height:50px; }
-}
+body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#F5F7FB}
+header{background:#1E6BFF;color:white;padding:15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
+nav a{color:white;margin:0 10px;text-decoration:none;font-weight:bold}
+.container{padding:20px;max-width:1200px;margin:auto}
+.hero{background:white;padding:30px;border-radius:10px;margin-bottom:20px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:15px;margin-bottom:30px}
+.card{background:white;border-radius:10px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);text-align:center}
+button{background:#1E6BFF;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-top:10px}
+button:hover{background:#4A8CFF}
+.cart{position:fixed;right:20px;bottom:20px;background:#1E6BFF;color:white;padding:12px;border-radius:50px;cursor:pointer;z-index:1000}
+footer{background:#0E3EA8;color:white;text-align:center;padding:20px;margin-top:40px}
+input,select{padding:8px;margin:5px 0;width:100%;border-radius:5px;border:1px solid #ccc}
+.admin{background:white;padding:15px;border-radius:10px;margin-top:20px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
+.search-bar{margin-bottom:15px}
+.featured{margin-bottom:30px}
 </style>
 </head>
 <body>
-
-<header>Numberhub - International Numbers</header>
-<div class="container">
-
-<!-- Registration/Login Section -->
-<div id="authSection" class="form-section">
-<h2>User Account</h2>
-<div id="registerDiv">
-<h3>Register</h3>
-<input type="text" id="regEmail" placeholder="Email"><br>
-<input type="password" id="regPass" placeholder="Password"><br>
-<button onclick="register()">Register</button>
-<p>Already have account? <a href="#" onclick="showLogin()">Login</a></p>
+<header>
+<div><b>NumberHub Pro</b></div>
+<nav>
+<a href="#">Home</a>
+<a href="#countries">Browse Numbers</a>
+<a href="#admin">Admin</a>
+</nav>
+</header><div class="container">
+<div class="hero">
+<h1>Buy International Phone Numbers Instantly</h1>
+<p>Choose a country, select a number, and receive it quickly.</p>
+</div><div class="search-bar">
+<input type="text" id="searchCountry" placeholder="Search country..." oninput="filterCountries()">
+</div><h3>Featured Numbers</h3>
+<div class="cards" id="featuredNumbers"></div><h3 id="countries">Available Countries</h3>
+<div class="cards" id="countryList"></div><h3>Numbers</h3>
+<div class="cards" id="numberList"></div><div class="admin" id="admin">
+<h3>Admin Panel</h3>
+<input id="country" placeholder="Country Name">
+<input id="number" placeholder="Phone Number">
+<input id="price" placeholder="Price">
+<button onclick="addNumber()">Add Number</button>
+<p><i>All numbers will appear in the list for users automatically. Change prices anytime.</i></p>
 </div>
-<div id="loginDiv" class="hidden">
-<h3>Login</h3>
-<input type="text" id="loginEmail" placeholder="Email"><br>
-<input type="password" id="loginPass" placeholder="Password"><br>
-<input type="password" id="adminPass" placeholder="Admin Password (Optional)"><br>
-<button onclick="login()">Login</button>
-<p>Forgot password? <a href="#" onclick="showForgot()">Reset</a></p>
-<p>Don't have account? <a href="#" onclick="showRegister()">Register</a></p>
-</div>
-<div id="forgotDiv" class="hidden">
-<h3>Forgot Password</h3>
-<input type="text" id="forgotEmail" placeholder="Enter your email"><br>
-<button onclick="sendResetCode()">Send Reset Code</button>
-<input type="text" id="resetCodeInput" placeholder="Enter code" class="hidden"><br>
-<input type="password" id="newPassword" placeholder="New password" class="hidden"><br>
-<button onclick="resetPassword()" id="resetBtn" class="hidden">Reset Password</button>
-<p><a href="#" onclick="showLogin()">Back to Login</a></p>
-</div>
-</div>
+</div><div class="cart" onclick="viewCart()">Cart (<span id="cartCount">0</span>)</div><footer>
+<p>NumberHub © 2026</p>
+<p>Contact Support on WhatsApp</p>
+</footer><script>
+let countries=["Nigeria","Kenya","Uganda","Ghana","India","Pakistan","Philippines","Indonesia","Mali","Burkina Faso","South Africa","Egypt","Morocco","Algeria","United States","Canada","Brazil","Argentina","Mexico","Chile","Colombia","Peru","United Kingdom","Germany","France","Italy","Spain","Netherlands","Sweden","Norway","Finland","Turkey","United Arab Emirates","Saudi Arabia","Qatar","Kuwait","Thailand","Vietnam","Malaysia","Singapore","Japan","China","Australia","New Zealand","Russia","Ukraine","Poland","Romania","Greece"];
 
-<!-- Search & Filter -->
-<div id="storeSection" class="hidden">
-<h2>Welcome, <span id="userEmailDisplay"></span> <button onclick="logout()">Logout</button></h2>
-
-<div id="searchFilter">
-<input type="text" id="searchInput" placeholder="Search by country" onkeyup="filterProducts()">
-<select id="priceFilter" onchange="filterProducts()">
-<option value="all">All Prices</option>
-<option value="0-4000">₦0 - ₦4000</option>
-<option value="4000-5000">₦4000 - ₦5000</option>
-<option value="5000-10000">₦5000+</option>
-</select>
-</div>
-
-<div class="products" id="products"></div>
-
-<!-- Cart Section -->
-<div class="cart-section">
-<h2>Cart</h2>
-<div id="cart"></div>
-<h3>Total: ₦<span id="total">0</span></h3>
-
-<h3>Choose Payment Method</h3>
-<select id="payment">
-<option value="Opay">Opay</option>
-<option value="Palmpay">Palmpay</option>
-<option value="Paystack">Paystack</option>
-</select>
-
-<div class="payment-info">
-<strong>Account Number:</strong> 7030608002<br>
-<strong>Name:</strong> Wisdom Tochukwu Nwabugwu
-</div>
-
-<div class="form-section">
-<h3>Confirm Payment</h3>
-<input type="text" id="payerName" placeholder="Your Name"><br>
-<input type="text" id="payerPhone" placeholder="Phone Number"><br>
-<input type="file" id="receipt" accept="image/*"><br>
-</div>
-
-<button id="checkoutBtn" onclick="paymentMade()">I Have Made Payment</button>
-</div>
-
-<!-- Admin Panel -->
-<div id="adminSection" class="hidden">
-<h2>Admin Panel</h2>
-<table id="usersTable">
-<tr>
-<th>Email</th><th>Cart Items</th><th>Total</th><th>Payer Name</th><th>Payer Phone</th><th>Receipt File</th><th>Action</th>
-</tr>
-</table>
-
-<h3>Edit Product Prices</h3>
-<table id="productsAdminTable">
-<tr><th>Country</th><th>Current Price</th><th>New Price</th><th>Update</th></tr>
-</table>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/emailjs-com@3/dist/email.min.js"></script>
-<script>
-emailjs.init("auWJGhokNvCvWyldO");
-
-// ----------- Account System -----------
-let accounts = JSON.parse(localStorage.getItem("accounts")||"{}");
-let cartsPerUser = JSON.parse(localStorage.getItem("cartsPerUser")||"{}");
-let paymentInfo = JSON.parse(localStorage.getItem("paymentInfo")||"{}");
-let currentUser = localStorage.getItem("currentUser")||"";
-let adminPassword = "admin123"; 
-let isAdmin=false;
-
-// 65 country products sample (can add all)
-let products = [
-{country:"Nigeria", price:3000, flag:"https://flagcdn.com/ng.svg"},
-{country:"Kenya", price:5000, flag:"https://flagcdn.com/ke.svg"},
-{country:"Ghana", price:5000, flag:"https://flagcdn.com/gh.svg"},
-{country:"Uganda", price:5000, flag:"https://flagcdn.com/ug.svg"},
-{country:"Burkina Faso", price:4000, flag:"https://flagcdn.com/bf.svg"},
-{country:"Mali", price:5000, flag:"https://flagcdn.com/ml.svg"},
-{country:"Cameroon", price:5000, flag:"https://flagcdn.com/cm.svg"},
-{country:"USA", price:5000, flag:"https://flagcdn.com/us.svg"},
-{country:"Canada", price:5000, flag:"https://flagcdn.com/ca.svg"},
-{country:"India", price:4000, flag:"https://flagcdn.com/in.svg"},
-{country:"Pakistan", price:4000, flag:"https://flagcdn.com/pk.svg"},
-{country:"Philippines", price:4000, flag:"https://flagcdn.com/ph.svg"},
-{country:"Indonesia", price:4000, flag:"https://flagcdn.com/id.svg"},
-{country:"Germany", price:5000, flag:"https://flagcdn.com/de.svg"},
-{country:"Italy", price:5000, flag:"https://flagcdn.com/it.svg"},
-{country:"France", price:5000, flag:"https://flagcdn.com/fr.svg"},
-{country:"Mexico", price:5000, flag:"https://flagcdn.com/mx.svg"},
-{country:"Peru", price:5000, flag:"https://flagcdn.com/pe.svg"},
-{country:"Russia", price:5000, flag:"https://flagcdn.com/ru.svg"},
-{country:"Australia", price:5000, flag:"https://flagcdn.com/au.svg"},
-{country:"Greece", price:5000, flag:"https://flagcdn.com/gr.svg"},
-// Add remaining countries here...
-];
-
-function showStore(){
-document.getElementById("authSection").classList.add("hidden");
-document.getElementById("storeSection").classList.remove("hidden");
-document.getElementById("userEmailDisplay").innerText = currentUser;
-renderProducts();
-renderCart();
-if(isAdmin){document.getElementById("adminSection").classList.remove("hidden"); renderAdmin(); renderAdminProducts();}
+// Preloaded example numbers for all countries
+let numbers=JSON.parse(localStorage.getItem("numbers")||"[]");
+if(numbers.length===0){
+    countries.forEach(c=>{
+        for(let i=1;i<=3;i++){
+            numbers.push({country:c,number:`+${Math.floor(1000000000 + Math.random()*9000000000)}`,price:Math.floor(1000 + Math.random()*1000)});
+        }
+    });
+    localStorage.setItem("numbers",JSON.stringify(numbers));
 }
 
-function showRegister(){document.getElementById("registerDiv").classList.remove("hidden");document.getElementById("loginDiv").classList.add("hidden");document.getElementById("forgotDiv").classList.add("hidden");}
-function showLogin(){document.getElementById("loginDiv").classList.remove("hidden");document.getElementById("registerDiv").classList.add("hidden");document.getElementById("forgotDiv").classList.add("hidden");}
-function showForgot(){document.getElementById("forgotDiv").classList.remove("hidden");document.getElementById("loginDiv").classList.add("hidden");document.getElementById("registerDiv").classList.add("hidden");}
+let cart=[];
+let orderCounter=parseInt(localStorage.getItem("orderCounter")||"0");
 
-function register(){
-const email=document.getElementById("regEmail").value;
-const pass=document.getElementById("regPass").value;
-if(email&&pass){
-if(accounts[email]){alert("Account exists!"); return;}
-accounts[email]=pass;
-cartsPerUser[email]=[];
-localStorage.setItem("accounts",JSON.stringify(accounts));
-localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));
-alert("Registered! Login now."); showLogin();
-}else{alert("Fill all fields");}
-}
-
-function login(){
-const email=document.getElementById("loginEmail").value;
-const pass=document.getElementById("loginPass").value;
-const adminPassInput=document.getElementById("adminPass").value;
-if(accounts[email]&&accounts[email]===pass){
-currentUser=email;
-localStorage.setItem("currentUser",currentUser);
-if(adminPassInput===adminPassword){isAdmin=true;}else{isAdmin=false;}
-showStore();
-}else{alert("Invalid credentials");}
-}
-
-function logout(){
-currentUser=""; localStorage.removeItem("currentUser");
-isAdmin=false;
-document.getElementById("storeSection").classList.add("hidden");
-document.getElementById("adminSection").classList.add("hidden");
-document.getElementById("authSection").classList.remove("hidden");
-}
-
-// ----------- Forgot Password -----------
-let resetCode="";
-const SERVICE_ID="wisdomwood", TEMPLATE_ID="template_qvusfvn";
-
-function sendResetCode(){
-const email=document.getElementById("forgotEmail").value;
-if(!accounts[email]){alert("No account with this email"); return;}
-resetCode=Math.floor(100000+Math.random()*900000).toString();
-emailjs.send(SERVICE_ID,TEMPLATE_ID,{to_email:email,code:resetCode})
-.then(()=>{alert("Reset code sent to your email");
-document.getElementById("resetCodeInput").classList.remove("hidden");
-document.getElementById("newPassword").classList.remove("hidden");
-document.getElementById("resetBtn").classList.remove("hidden");},err=>{alert("Error sending email: "+err);});
-}
-
-function resetPassword(){
-const code=document.getElementById("resetCodeInput").value;
-const newPass=document.getElementById("newPassword").value;
-const email=document.getElementById("forgotEmail").value;
-if(code===resetCode){
-accounts[email]=newPass;
-localStorage.setItem("accounts",JSON.stringify(accounts));
-alert("Password reset successful! Login now.");
-showLogin();
-}else{alert("Invalid code");}
-}
-
-// ----------- Render Products & Cart -----------
-function renderProducts(filteredProducts){
-const productsDiv=document.getElementById("products");
-productsDiv.innerHTML="";
-(filteredProducts||products).forEach((p,index)=>{
-productsDiv.innerHTML+=`
-<div class="product">
-<img src="${p.flag}" alt="${p.country} flag">
-<h3>${p.country}</h3>
-<p>₦${p.price}</p>
-<input type="number" id="qty${index}" value="1" min="1"><br>
-<button onclick="addToCart(${index})">Add to Cart</button>
-</div>`;
+function loadCountries(){
+let list=document.getElementById("countryList");
+list.innerHTML="";
+countries.forEach(c=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<h4>${c}</h4><button onclick="showNumbers('${c}')">View Numbers</button>`;
+list.appendChild(div);
 });
 }
 
-function addToCart(index){
-const qty=parseInt(document.getElementById("qty"+index).value);
-const item=products[index];
-const userCart = cartsPerUser[currentUser]||[];
-const existing=userCart.find(c=>c.country===item.country);
-if(existing){existing.qty+=qty;}else{userCart.push({country:item.country,price:item.price,qty:qty});}
-cartsPerUser[currentUser]=userCart;
-localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));
-renderCart();
-}
-
-function removeFromCart(country){
-let userCart=cartsPerUser[currentUser];
-userCart=userCart.filter(c=>c.country!==country);
-cartsPerUser[currentUser]=userCart;
-localStorage.setItem("cartsPerUser",JSON.stringify(cartsPerUser));
-renderCart();
-}
-
-function renderCart(){
-const cartDiv=document.getElementById("cart");
-cartDiv.innerHTML="";
-let total=0;
-let userCart=cartsPerUser[currentUser]||[];
-userCart.forEach(c=>{
-total+=c.price*c.qty;
-cartDiv.innerHTML+=`<div class="cart-item"><span>${c.country} x ${c.qty} = ₦${c.price*c.qty}</span>
-<button onclick="removeFromCart('${c.country}')">Remove</button></div>`;
+function filterCountries(){
+let query=document.getElementById("searchCountry").value.toLowerCase();
+let filtered=countries.filter(c=>c.toLowerCase().includes(query));
+let list=document.getElementById("countryList");
+list.innerHTML="";
+filtered.forEach(c=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<h4>${c}</h4><button onclick="showNumbers('${c}')">View Numbers</button>`;
+list.appendChild(div);
 });
-document.getElementById("total").innerText=total;
 }
 
-// ----------- Payment -----------
-
-function paymentMade(){
-let userCart=cartsPerUser[currentUser]||[];
-if(userCart.length===0){alert("Cart empty"); return;}
-const name=document.getElementById("payerName").value;
-const phone=document.getElementById("payerPhone").value;
-const receipt=document.getElementById("receipt").files[0];
-if(!name||!phone||!receipt){alert("Fill name, phone, and upload receipt"); return;}
-paymentInfo[currentUser]={name,phone,receipt:receipt.name};
-localStorage.setItem("paymentInfo",JSON.stringify(paymentInfo));
-const paymentMethod=document.getElementById("payment").value;
-const total=document.getElementById("total").innerText;
-const message=`Hello, I have made payment via ${paymentMethod}.\nName: ${name}\nPhone: ${phone}\nTotal: ${total}`;
-const url="https://wa.me/2349157054608?text="+encodeURIComponent(message);
-window.location.href=url;
+function showNumbers(country){
+let list=document.getElementById("numberList");
+list.innerHTML="";
+numbers.filter(n=>n.country===country).forEach(n=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<b>${n.number}</b><br>₦${n.price}<br><button onclick="addCart('${n.number}',${n.price})">Add to Cart</button>`;
+list.appendChild(div);
+});
+updateFeatured();
 }
 
-// ----------- Admin Panel -----------
+function updateFeatured(){
+let featured=document.getElementById("featuredNumbers");
+featured.innerHTML="";
+numbers.slice(0,6).forEach(n=>{
+let div=document.createElement("div");
+div.className="card";
+div.innerHTML=`<b>${n.number}</b><br>₦${n.price}<br><button onclick="addCart('${n.number}',${n.price})">Add to Cart</button>`;
+featured.appendChild(div);
+});
+}
 
-function renderAdmin(){
-let table=document.getElementById("usersTable");
-table.innerHTML=`<tr>
-<th>Email</th><th>Cart Items</th><th>Total</th><th>Payer Name</th><th>Payer Phone</th><th>Receipt File</th><th>Action</th></tr>`;
-for(let email in accounts){
-let userCart=cartsPerUser[email]||[];
-let total=userCart.reduce((sum,item)=>sum+item.price*item.qty,0);
-let info=paymentInfo[email]||{};
-let row=table.insertRow();
-row.insertCell(0).innerText=email;
-row.insertCell(1).innerText=userCart.map(c=>c.country+" x"+c.qty).join(", ");
-row.insertCell(2).innerText="₦"+total;
-row.insertCell(3).innerText=info.name||"";
-row.insertCell(4).innerText=info.phone||"";
-row.insertCell(5).innerText=info.receipt||"";
-let delBtn=document.createElement("button");
-delBtn.innerText="Remove";
-delBtn.onclick=function(){if(confirm("Delete this user?")){delete accounts[email];delete cartsPerUser[email];delete paymentInfo[email];localStorage.setItem("accounts",JSON
+function addNumber(){
+let c=document.getElementById("country").value.trim();
+let n=document.getElementById("number").value.trim();
+let p=document.getElementById("price").value.trim();
+if(c&&n&&p){
+numbers.push({country:c,number:n,price:p});
+localStorage.setItem("numbers",JSON.stringify(numbers));
+alert("Number added successfully");
+document.getElementById("country").value="";
+document.getElementById("number").value="";
+document.getElementById("price").value="";
+showNumbers(c);
+} else {alert("Please fill all fields")}
+}
+
+function addCart(num,price){
+cart.push({num,price});
+document.getElementById("cartCount").innerText=cart.length;
+}
+
+function viewCart(){
+if(cart.length===0){alert("Cart is empty");return;}
+orderCounter++;
+localStorage.setItem("orderCounter",orderCounter);
+let ref=`NX${new Date().toISOString().slice(0,10).replace(/-/g,'')}-${orderCounter}`;
+let msg=`Hello Nexar Admin, I want to buy these numbers (Ref: ${ref}):%0A`;
+cart.forEach(i=>msg+=`${i.num} - ₦${i.price}%0A`);
+window.open(`https://wa.me/2349157054608?text=${msg}`);
+cart=[];
+document.getElementById("cartCount").innerText=0;
+}
+
+loadCountries();
+updateFeatured();
+</script></body>
+</html>
