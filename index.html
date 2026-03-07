@@ -1,193 +1,564 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>NumberHub Secure Marketplace</title>
-<style>
-body{font-family:Arial,Helvetica,sans-serif;margin:0;background:#F5F7FB}
-header{background:#1E6BFF;color:white;padding:15px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 2px 5px rgba(0,0,0,0.1)}
-nav a{color:white;margin:0 10px;text-decoration:none;font-weight:bold}
-.container{padding:20px;max-width:1200px;margin:auto}
-button{background:#1E6BFF;color:white;border:none;padding:8px 12px;border-radius:6px;cursor:pointer;margin-top:10px}
-button:hover{background:#4A8CFF}
-input{padding:8px;margin:5px 0;width:100%;border-radius:5px;border:1px solid #ccc}
-.card{background:white;border-radius:10px;padding:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1);text-align:center;margin-bottom:15px}
-footer{background:#0E3EA8;color:white;text-align:center;padding:20px;margin-top:40px}
-.hidden{display:none}
-</style>
+  <meta charset="UTF-8">
+  <title>NumberHub - Buy Your International Number</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    /* --- CSS: Modern Jumia-like Design --- */
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f8f9fb;
+      color: #232323;
+      margin: 0;
+      padding: 0;
+    }
+    .container { max-width: 1100px; margin: auto; padding: 32px 10px; }
+    header, .nav {
+      background: #222;
+      color: #fff;
+      padding: 14px 0;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+    h1, h2, h3 { color: #222; }
+    .nav { background: #f3f4f7; color: #111; font-weight: 600; margin-bottom: 24px; }
+    .nav span { margin: 0 8px; cursor: pointer; }
+    .card {
+      background: #fff;
+      border-radius: 13px;
+      box-shadow: 0 3px 15px #ebebeb;
+      margin-bottom: 25px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      transition: box-shadow 0.2s;
+    }
+    .card:hover { box-shadow: 0 6px 18px #dedede; }
+    .country-grid { display: flex; flex-wrap: wrap; gap: 18px; margin-bottom: 32px; }
+    .country-card, .number-card {
+      flex: 1 1 220px;
+      min-width: 190px;
+      max-width: 220px;
+    }
+    .number-list { display: flex; flex-wrap: wrap; gap: 16px; }
+    .number-card {
+      border: 1px solid #ececec;
+      padding: 14px;
+      margin-bottom: 4px;
+      border-radius: 8px;
+      background: #f7f7fc;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .number-price {
+      color: #fa6400;
+      font-weight: bold;
+      font-size: 1em;
+    }
+    .btn, button {
+      background: #fa6400;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 21px;
+      font-size: 1em;
+      cursor: pointer;
+      margin: 6px 0;
+      transition: background 0.2s;
+    }
+    .btn:hover, button:hover { background: #191919; }
+    .input { padding: 8px; border-radius: 5px; border: 1px solid #e3e3e3; }
+    .hide, [hidden] { display: none !important; }
+    .error { color: #d84051; font-weight: bold; }
+    .success { color: #1a9641; }
+    .flex-between { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+    @media (max-width: 700px) {
+      .country-grid, .number-list { flex-direction: column; gap: 6px; }
+      .card, .country-card, .number-card, .container { padding: 12px !important; }
+      .number-price { font-size: 0.95em; }
+    }
+    .admin-panel table { width: 100%; border-collapse: collapse; font-size: 0.97em; }
+    .admin-panel th, .admin-panel td {
+      border: 1px solid #e5e5ef;
+      padding: 7px;
+      background: #fafbff;
+    }
+    .admin-panel th { background: #f3f4f8; }
+    .admin-panel tr:nth-child(even) { background: #f9f9fd; }
+    .admin-panel .delivered { color: #19a362; font-weight: bold; }
+    .admin-panel .pending { color: #df4f2b; font-weight: bold; }
+    .admin-panel .add {
+      background: #3740fa;
+    }
+    .admin-panel input, .admin-panel select {
+      padding: 3px;
+      font-size: 0.95em;
+    }
+    /* Cart icon */
+    .cart-icon {
+      font-size: 1.31em;
+      margin-right: 7px;
+      vertical-align: middle;
+    }
+    /* Whatsapp Button */
+    .whatsapp-btn {
+      background: #25D366 !important;
+      color: #fff !important;
+      border: none;
+    }
+    /* Orders Grid */
+    .orders-grid { display: flex; flex-wrap: wrap; gap: 18px; }
+    .order-card {
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: 12px;
+      box-shadow: 0 1px 5px #ededed;
+      margin-bottom: 6px;
+      padding: 15px;
+      min-width: 220px;
+      max-width: 430px;
+    }
+  </style>
 </head>
 <body>
-<header>
-<div><b>NumberHub</b></div>
-<nav>
-<a href="#" id="homeLink">Home</a>
-<a href="#" id="numbersLink" class="hidden">Numbers</a>
-<a href="#" id="dashboardLink" class="hidden">Dashboard</a>
-<a href="#" id="logoutLink" class="hidden" onclick="logout()">Logout</a>
-</nav>
-</header>
-<div class="container" id="mainContainer">
-<!-- Login / Signup -->
-<div id="authContainer">
-<h2>Welcome to NumberHub</h2>
-<div id="signupForm">
-<h3>Sign Up</h3>
-<input type="text" id="signupUsername" placeholder="Username">
-<input type="password" id="signupPassword" placeholder="Password">
-<button onclick="signup()">Sign Up</button>
-</div>
-<div id="loginForm">
-<h3>Login</h3>
-<input type="text" id="loginUsername" placeholder="Username">
-<input type="password" id="loginPassword" placeholder="Password">
-<button onclick="login()">Login</button>
-</div>
-<div id="adminLoginForm" class="hidden">
-<h3>Admin Login</h3>
-<input type="text" id="adminUsername" placeholder="Admin Username">
-<input type="password" id="adminPassword" placeholder="Admin Password">
-<button onclick="adminLogin()">Admin Login</button>
-</div>
-</div><!-- Numbers Section --><div id="numbersContainer" class="hidden">
-<h2>Available Numbers</h2>
-<p>Numbers are visible only after payment is confirmed.</p>
-<div id="numbersList"></div>
-<button onclick="checkout()">Checkout via WhatsApp</button>
-</div><!-- Admin Dashboard --><div id="dashboardContainer" class="hidden">
-<h2>Admin Dashboard</h2>
-<h3>Orders</h3>
-<div id="ordersList"></div>
-<h3>Add Numbers (Optional)</h3>
-<input type="text" id="adminNumber" placeholder="Number">
-<input type="text" id="adminUser" placeholder="Assign to Username">
-<button onclick="addNumberAdmin()">Add Number</button>
-</div>
-</div>
-<footer>
-<p>NumberHub © 2026</p>
-<p>Contact Support on WhatsApp</p>
-</footer><script>
-// Simple localStorage-based user/auth system
-let users = JSON.parse(localStorage.getItem('users')||'{}');
-let admin = {username:'admin', password:'admin123'}; // you can change
-let currentUser = localStorage.getItem('currentUser')||'';
-let numbers = JSON.parse(localStorage.getItem('numbers')||'[]'); // {username, number, delivered:false}
-let orders = JSON.parse(localStorage.getItem('orders')||'[]'); // {username, numbers, ref}
+  <header>
+    <h1>NumberHub - Buy International Numbers</h1>
+  </header>
+  <div class="nav flex-between" id="mainNav">
+    <span id="navHome">Home</span>
+    <span id="navCart">Cart (<span id="cartCount">0</span>)</span>
+    <span id="navOrders">Orders</span>
+    <span id="navUser"></span>
+    <span id="navAdmin" style="float:right">Admin</span>
+    <span id="navLogout" class="hide">Logout</span>
+  </div>
 
-function signup(){
-    let u=document.getElementById('signupUsername').value.trim();
-    let p=document.getElementById('signupPassword').value.trim();
-    if(!u||!p){alert('Fill all fields'); return;}
-    if(users[u]){alert('Username exists'); return;}
-    users[u]={password:p};
-    localStorage.setItem('users', JSON.stringify(users));
-    alert('Signup successful. Please login.');
-}
+  <div class="container">
 
-function login(){
-    let u=document.getElementById('loginUsername').value.trim();
-    let p=document.getElementById('loginPassword').value.trim();
-    if(users[u] && users[u].password===p){
-        currentUser=u;
-        localStorage.setItem('currentUser', currentUser);
-        showNumbersPage();
-    } else {alert('Invalid credentials');}
-}
+    <!-- Auth Forms -->
+    <div id="authSection">
+      <!-- User Login/Signup -->
+      <div id="userAuth" class="card">
+        <h2>Welcome to NumberHub!</h2>
+        <div id="loginArea">
+          <h3>Login</h3>
+          <div>
+            <input class="input" type="text" id="loginUsername" placeholder="Username">
+            <input class="input" type="password" id="loginPassword" placeholder="Password">
+            <button onclick="loginUser()">Login</button>
+          </div>
+          <div class="error" id="loginError"></div>
+        </div>
+        <hr>
+        <div id="signupArea">
+          <h3>Signup</h3>
+          <div>
+            <input class="input" type="text" id="signupUsername" placeholder="Username (letters/numbers)">
+            <input class="input" type="password" id="signupPassword" placeholder="Password">
+            <button onclick="signupUser()">Signup</button>
+          </div>
+          <div class="error" id="signupError"></div>
+        </div>
+      </div>
+    </div>
 
-function adminLogin(){
-    let u=document.getElementById('adminUsername').value.trim();
-    let p=document.getElementById('adminPassword').value.trim();
-    if(u===admin.username && p===admin.password){
-        currentUser='admin';
-        showAdminDashboard();
-    } else {alert('Invalid admin credentials');}
-}
+    <!-- Admin Login -->
+    <div id="adminAuth" class="card hide">
+      <h2>Admin Login</h2>
+      <div>
+        <input class="input" type="text" id="adminUsername" placeholder="Admin Username">
+        <input class="input" type="password" id="adminPassword" placeholder="Admin Password">
+        <button onclick="loginAdmin()">Login</button>
+      </div>
+      <div class="error" id="adminLoginError"></div>
+    </div>
 
-function logout(){
-    currentUser='';
-    localStorage.removeItem('currentUser');
-    location.reload();
-}
+    <!-- Country Selection and Numbers -->
+    <div id="marketplaceSection" class="hide">
+      <h2>Select a Country</h2>
+      <div class="country-grid" id="countryGrid">
+        <!-- Countries dynamically rendered here -->
+      </div>
+      <div>
+        <div id="numberSection" class="hide">
+          <h3 id="countryTitle"></h3>
+          <div class="number-list" id="numberList">
+            <!-- Numbers dynamically rendered here -->
+          </div>
+        </div>
+      </div>
+    </div>
 
-function showNumbersPage(){
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('numbersContainer').classList.remove('hidden');
-    document.getElementById('numbersLink').classList.remove('hidden');
-    document.getElementById('logoutLink').classList.remove('hidden');
-    displayUserNumbers();
-}
+    <!-- Cart Section -->
+    <div id="cartSection" class="hide">
+      <h2><span class="cart-icon">🛒</span>Your Cart</h2>
+      <div>
+        <div id="cartList"></div>
+        <hr>
+        <b>Total:</b> <span id="cartTotal"></span>
+        <br><br>
+        <button id="checkoutBtn" class="whatsapp-btn" onclick="checkoutOrder()">Checkout via WhatsApp</button>
+        <div id="checkoutStatus"></div>
+      </div>
+    </div>
 
-function showAdminDashboard(){
-    document.getElementById('authContainer').classList.add('hidden');
-    document.getElementById('dashboardContainer').classList.remove('hidden');
-    document.getElementById('dashboardLink').classList.remove('hidden');
-    document.getElementById('logoutLink').classList.remove('hidden');
-    displayOrders();
-}
+    <!-- Orders Section -->
+    <div id="ordersSection" class="hide">
+      <h2>Your Orders</h2>
+      <div id="ordersGrid" class="orders-grid"></div>
+    </div>
 
-function addNumberAdmin(){
-    let n=document.getElementById('adminNumber').value.trim();
-    let u=document.getElementById('adminUser').value.trim();
-    if(!n||!u){alert('Fill all fields'); return;}
-    numbers.push({username:u, number:n, delivered:false});
-    localStorage.setItem('numbers', JSON.stringify(numbers));
-    alert('Number added');
-    displayOrders();
-}
+    <!-- Admin Dashboard -->
+    <div id="adminPanel" class="admin-panel hide">
+      <h2>Admin Dashboard</h2>
+      <div>
+        <h3>Users</h3>
+        <table>
+          <thead><tr><th>Username</th><th>Orders</th></tr></thead>
+          <tbody id="adminUsersTable"></tbody>
+        </table>
+      </div>
+      <div>
+        <h3>Add Numbers</h3>
+        <div>
+          <select id="adminCountrySelect"></select>
+          <input type="text" id="adminNumberInput" placeholder="Phone Number (Format: +CountryCode...)" style="width:150px;">
+          <input type="number" id="adminNumberPrice" placeholder="Price ($)" style="width:95px;">
+          <button class="add" onclick="adminAddNumber()">Add Number</button>
+        </div>
+      </div>
+      <div>
+        <h3>Numbers (per Country)</h3>
+        <div id="adminNumbersList"></div>
+      </div>
+      <div>
+        <h3>Orders & Delivery</h3>
+        <div id="adminOrdersTable"></div>
+      </div>
+      <button onclick="adminLogout()">Logout</button>
+    </div>
+  </div>
 
-function displayUserNumbers(){
-    let list=document.getElementById('numbersList');
-    list.innerHTML='';
-    let userNumbers = numbers.filter(n=>n.username===currentUser && n.delivered);
-    if(userNumbers.length===0){
-        list.innerHTML='<p>No numbers available. Please checkout and confirm payment.</p>';
+  <!-- JS Begins Here -->
+  <script>
+    /* ----- JS Variables & Data ----- */
+    // 🔴 CHANGE THESE TO CUSTOMIZE:
+    const ADMIN_USERNAME = "admin";
+    const ADMIN_PASSWORD = "numberhub@2024";
+    const ADMIN_WHATSAPP = "+12345556667"; // 🔴 CHANGE this to your WhatsApp number
+
+    // Available countries and numbers (example data, add/remove as needed)
+    let availableNumbers = {
+      "USA": [
+        { number: "+1 202-555-0181", price: 9.5, delivered: false },
+        { number: "+1 202-555-0138", price: 10.0, delivered: false }
+      ],
+      "UK": [
+        { number: "+44 7700 900077", price: 8.5, delivered: false },
+        { number: "+44 7911 123456", price: 12.0, delivered: false }
+      ],
+      "India": [
+        { number: "+91 90000 12345", price: 7.0, delivered: false }
+      ],
+      "Canada": [
+        { number: "+1 613-555-0152", price: 11.5, delivered: false }
+      ],
+      // Add more countries & numbers!
+    }
+
+    /* --- Persist Numbers in localStorage for admin changes --- */
+    function saveNumbersToStore() {
+      localStorage.setItem('numberhub_availableNumbers', JSON.stringify(availableNumbers));
+    }
+    function loadNumbersFromStore() {
+      const stored = localStorage.getItem('numberhub_availableNumbers');
+      if (stored) availableNumbers = JSON.parse(stored);
+    }
+    loadNumbersFromStore();
+
+    // Users: Array {username, password, orders: [], numbers: []}
+    function saveUsersToStore(users) {
+      localStorage.setItem('numberhub_users', JSON.stringify(users));
+    }
+    function loadUsersFromStore() {
+      return JSON.parse(localStorage.getItem('numberhub_users')) || [];
+    }
+    // Orders: Array {id, username, country, numbers:[], status, ref, total}
+    function saveOrdersToStore(orders) {
+      localStorage.setItem('numberhub_orders', JSON.stringify(orders));
+    }
+    function loadOrdersFromStore() {
+      return JSON.parse(localStorage.getItem('numberhub_orders')) || [];
+    }
+
+    /* ----- Auth State ----- */
+    let currentUser = null;
+    let currentAdmin = false;
+    let userOrders = [];
+    let userNumbers = [];
+    let userCart = [];
+
+    /* ----- Utility ----- */
+    function genRefCode() {
+      return "NH-" + Math.floor(100000 + Math.random() * 900000);
+    }
+
+    function showSection(section) {
+      // Hide all.
+      ["authSection", "adminAuth", "marketplaceSection", "numberSection", "cartSection", "ordersSection", "adminPanel"].forEach(id => {
+        document.getElementById(id).classList.add("hide");
+      });
+      // Show desired
+      document.getElementById(section).classList.remove("hide");
+    }
+    function updateNav() {
+      document.getElementById('navUser').innerHTML = currentUser ? `👤 ${currentUser}` : "";
+      document.getElementById('navLogout').classList.toggle("hide", !(currentUser || currentAdmin));
+    }
+
+    /* ----- Auth Related ----- */
+    function loginUser() {
+      let u = document.getElementById('loginUsername').value.trim();
+      let p = document.getElementById('loginPassword').value;
+      let users = loadUsersFromStore();
+      let found = users.find(x => x.username === u && x.password === p);
+      if (!found) {
+        document.getElementById('loginError').innerHTML = "Invalid username or password.";
         return;
+      }
+      currentUser = u;
+      userOrders = found.orders || [];
+      userNumbers = found.numbers || [];
+      userCart = [];
+      showSection('marketplaceSection');
+      renderCountries();
+      updateNav();
     }
-    userNumbers.forEach(n=>{
-        let div=document.createElement('div');
-        div.className='card';
-        div.innerHTML=`<b>${n.number}</b>`;
-        list.appendChild(div);
-    });
-}
-
-function displayOrders(){
-    let list=document.getElementById('ordersList');
-    list.innerHTML='';
-    let grouped = {};
-    numbers.forEach(n=>{
-        if(!grouped[n.username]) grouped[n.username]=[];
-        grouped[n.username].push(n);
-    });
-    for(let u in grouped){
-        let div=document.createElement('div');
-        div.className='card';
-        let inner='';
-        grouped[u].forEach(num=>{
-            inner+=`${num.number} - Delivered: ${num.delivered} <button onclick="markDelivered('${num.username}','${num.number}')">Mark Delivered</button><br>`;
-        });
-        div.innerHTML=`<b>User: ${u}</b><br>${inner}`;
-        list.appendChild(div);
+    function signupUser() {
+      let u = document.getElementById('signupUsername').value.trim();
+      let p = document.getElementById('signupPassword').value;
+      if (!/^[a-zA-Z0-9]+$/.test(u) || u.length < 3) {
+        document.getElementById('signupError').innerHTML = "Username must be at least 3 characters, letters/numbers only.";
+        return;
+      }
+      if (p.length < 4) {
+        document.getElementById('signupError').innerHTML = "Password must be at least 4 characters.";
+        return;
+      }
+      let users = loadUsersFromStore();
+      if (users.some(x => x.username === u)) {
+        document.getElementById('signupError').innerHTML = "Username already exists.";
+        return;
+      }
+      users.push({ username: u, password: p, orders: [], numbers: [] });
+      saveUsersToStore(users);
+      document.getElementById('signupError').innerHTML = "Signup successful! Please login.";
+      document.getElementById('signupUsername').value = '';
+      document.getElementById('signupPassword').value = '';
     }
-}
 
-function markDelivered(user, num){
-    numbers=numbers.map(n=>{if(n.username===user && n.number===num){n.delivered=true;} return n;});
-    localStorage.setItem('numbers', JSON.stringify(numbers));
-    displayOrders();
-    alert('Number marked as delivered');
-}
+    function logout() {
+      currentUser = null;
+      currentAdmin = false;
+      userCart = [];
+      userOrders = [];
+      userNumbers = [];
+      showSection('authSection');
+      updateNav();
+    }
 
-function checkout(){
-    let ref='NX'+new Date().toISOString().slice(0,10).replace(/-/g,'')+'-'+Math.floor(Math.random()*1000);
-    let msg=`Hello Admin, ${currentUser} wants to buy numbers (Ref: ${ref}).`;
-    window.open(`https://wa.me/2349157054608?text=${msg}`);
-    alert('Send payment proof to Admin via WhatsApp. Numbers will appear after confirmation.');
-}
+    // Admin login
+    function loginAdmin() {
+      let u = document.getElementById('adminUsername').value.trim();
+      let p = document.getElementById('adminPassword').value;
+      if (u === ADMIN_USERNAME && p === ADMIN_PASSWORD) {
+        currentAdmin = true;
+        showSection('adminPanel');
+        renderAdminPanel();
+        updateNav();
+        return;
+      }
+      document.getElementById('adminLoginError').innerHTML = "Invalid admin credentials.";
+    }
+    function adminLogout() { logout(); }
 
-// Show admin login link if no current user
-if(!currentUser){
-    document.getElementById('adminLoginForm').classList.remove('hidden');
-}
-</script></body>
-    </html>
+    /* ----- Navigation ----- */
+    document.getElementById('navHome').onclick = function() {
+      if (currentAdmin) showSection('adminPanel');
+      else if (currentUser) { showSection('marketplaceSection'); renderCountries(); }
+      else showSection('authSection');
+    };
+    document.getElementById('navCart').onclick = function() {
+      if (!currentUser) return;
+      showSection('cartSection');
+      renderCart();
+    };
+    document.getElementById('navOrders').onclick = function() {
+      if (!currentUser) return;
+      showSection('ordersSection');
+      renderOrders();
+    };
+    document.getElementById('navAdmin').onclick = function() {
+      if (currentAdmin) { showSection('adminPanel'); renderAdminPanel(); }
+      else { showSection('adminAuth'); }
+    };
+    document.getElementById('navLogout').onclick = function() { logout(); };
+
+    /* ----- Marketplace ----- */
+    function renderCountries() {
+      let div = document.getElementById('countryGrid');
+      div.innerHTML = '';
+      for (const country of Object.keys(availableNumbers)) {
+        let cnt = availableNumbers[country].length;
+        let el = document.createElement('div');
+        el.className = "card country-card";
+        el.innerHTML = `<h3>${country}</h3>
+        <div>${cnt} numbers available</div>
+        <button onclick="showNumbers('${country}')">View Numbers</button>`;
+        div.appendChild(el);
+      }
+      document.getElementById('numberSection').classList.add('hide');
+    }
+    function showNumbers(country) {
+      let numbers = availableNumbers[country];
+      if (!numbers) return;
+      document.getElementById('countryTitle').innerHTML = `${country} - Available Numbers`;
+      let list = document.getElementById('numberList');
+      list.innerHTML = '';
+      numbers.forEach((item, idx) => {
+        // Only show if not delivered yet and not purchased by any user
+        let locked = item.delivered ? false : true;
+        let userHas = userNumbers.includes(item.number);
+        let bought = isNumberBought(item.number);
+
+        let displayNumber = (locked || bought) ? "Locked" : item.number;
+        let btnDisabled = locked || bought || userHas;
+        let card = document.createElement('div');
+        card.className = "number-card";
+        card.innerHTML = `
+          <span>${displayNumber}</span>
+          <span class="number-price">$${item.price.toFixed(2)}</span>
+          <button ${btnDisabled ? "disabled" : ""} onclick="addToCart('${country}',${idx})">${userHas ? "Already Purchased" : "Add to Cart"}</button>
+        `;
+        list.appendChild(card);
+      });
+      document.getElementById('numberSection').classList.remove('hide');
+    }
+    function addToCart(country, idx) {
+      let item = availableNumbers[country][idx];
+      if (!item.delivered && !currentAdmin) return;
+      // Only allow adding if number not already purchased
+      if (isNumberBought(item.number)) return;
+      // Also check for duplicate in cart
+      if (userCart.some(x => x.number === item.number)) return;
+      userCart.push({ country, idx, number: item.number, price: item.price });
+      renderCart();
+      updateCartCount();
+    }
+    function updateCartCount() {
+      document.getElementById('cartCount').innerHTML = userCart.length;
+    }
+    function renderCart() {
+      let div = document.getElementById('cartList');
+      div.innerHTML = '';
+      let total = 0;
+      userCart.forEach((item, i) => {
+        let el = document.createElement('div');
+        el.className = "number-card";
+        el.innerHTML =
+          `<span>${item.number}</span>
+          <span class="number-price">$${item.price.toFixed(2)}</span>
+          <button onclick="removeCartItem(${i})">Remove</button>`;
+        div.appendChild(el);
+        total += item.price;
+      });
+      document.getElementById('cartTotal').innerHTML = `$${total.toFixed(2)}`;
+      updateCartCount();
+    }
+    function removeCartItem(idx) {
+      userCart.splice(idx, 1);
+      renderCart();
+      updateCartCount();
+    }
+
+    /* ----- Checkout Process ----- */
+    function checkoutOrder() {
+      if (userCart.length === 0) {
+        document.getElementById('checkoutStatus').innerHTML = "Cart is empty.";
+        return;
+      }
+      // Build WhatsApp message
+      let refCode = genRefCode();
+      let msg = `NEW ORDER: Reference: ${refCode}\nUser: ${currentUser}\nNumbers:\n`;
+      userCart.forEach(item => {
+        msg += `${item.number} (${item.country}) $${item.price}\n`;
+      });
+      msg += `Total: $${userCart.reduce((a,b)=>a+b.price,0).toFixed(2)}\n`;
+      msg += `\nMark numbers as delivered after payment!`;
+
+      // Save order in orders
+      let orders = loadOrdersFromStore();
+      let order = {
+        id: Date.now(),
+        username: currentUser,
+        country: userCart.map(x=>x.country),
+        numbers: userCart.map(x=>x.number),
+        status: "pending",
+        ref: refCode,
+        total: userCart.reduce((a,b)=>a+b.price,0)
+      };
+      orders.push(order);
+      saveOrdersToStore(orders);
+
+      // Attach to user
+      let users = loadUsersFromStore();
+      let u = users.find(x => x.username === currentUser);
+      if (u) {
+        u.orders = (u.orders || []);
+        u.orders.push(order);
+        saveUsersToStore(users);
+      }
+
+      document.getElementById('checkoutStatus').innerHTML = `<span class="success">Order placed! Send this via WhatsApp:</span><br>
+        <a target="_blank" class="btn whatsapp-btn" href="https://wa.me/${ADMIN_WHATSAPP.replace(/\D/g,'')}?text=${encodeURIComponent(msg)}">Send Order</a>
+        <br>Ref: <b>${refCode}</b>`;
+      userCart = [];
+      updateCartCount();
+    }
+
+    /* ----- Orders Section ----- */
+    function renderOrders() {
+      let users = loadUsersFromStore();
+      let u = users.find(x => x.username === currentUser);
+      let orders = (u && u.orders) ? u.orders : [];
+      let div = document.getElementById('ordersGrid');
+      div.innerHTML = '';
+      orders.slice().reverse().forEach(order => {
+        // Only show numbers if delivered.
+        let delivered = order.status === "delivered";
+        let card = document.createElement('div');
+        card.className = "order-card";
+        card.innerHTML = `
+          <b>Order Ref:</b> ${order.ref}<br>
+          <b>Status:</b> <span class="${delivered ? 'delivered' : 'pending'}">${delivered ? 'Delivered' : 'Pending'}</span><br>
+          <b>Date:</b> ${new Date(order.id).toLocaleString()}<br>
+          <b>Numbers:</b>
+          ${delivered ?
+            order.numbers.map(n=>`<div>${n}</div>`).join('')
+            : "<i>Locked until payment & delivery</i>"}
+          <br><b>Total:</b> $${order.total}
+        `;
+        div.appendChild(card);
+      });
+      if (orders.length === 0) div.innerHTML = "<i>No orders yet.</i>";
+    }
+
+    /* ----- Admin Panel ----- */
+    function renderAdminPanel() {
+      // Users
+      let users = loadUsersFromStore();
+      let table = document.getElementById('adminUsersTable');
+      t
